@@ -9,7 +9,7 @@ RM = rm -f
 MYKERNEL_ELF = mykernel.elf
 MYKERNEL_BIN = mykernel.bin
 MYKERNEL_IMG = mykernel.img
-SUBDIRS = boot kernel
+SUBDIRS = boot kernel x86
 
 all:
 	@for subdir in $(SUBDIRS); do \
