@@ -2,7 +2,7 @@ OUTPUT_FORMAT("elf32-i386")
 
 SECTIONS {
 	
-	.text 0x7c00 : AT (0) {
+	.text 0x7c00 : AT(0) {
 		boot/boot.o (.text)
 	}
 
