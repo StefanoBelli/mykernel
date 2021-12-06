@@ -11,10 +11,12 @@ SECTIONS {
 		x86/x86.o (.text)
 	}
 
-	kernel.data 0x200000 : AT (0x100200) {
+	/*
+	kernel.data 0x10ffef : AT (0x100200) {
 		kernel/kmain.o (.data)
 		kernel/kmain.o (.bss)
 	}
+	*/
 
 	/DISCARD/ : {
 		*(.note.gnu.property) 

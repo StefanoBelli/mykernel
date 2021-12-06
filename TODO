@@ -1,0 +1,2 @@
+ - load kernel data from BIOS INT calls
+ - VGA text driver
