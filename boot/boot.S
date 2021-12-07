@@ -51,7 +51,7 @@ call bios_printzln
 jmp cpu_halt
 
 load_kernel: #also load kernel data
-movw $0x201, %ax
+movw $0x202, %ax
 movw $2, %cx
 xorb %dh, %dh
 movw $0xffff, %bx
