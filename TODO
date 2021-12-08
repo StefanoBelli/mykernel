@@ -1,3 +1,2 @@
  - load kernel data from BIOS INTs / load kernel data from FDC DMA or PIO
- - VGA text driver
  - FDC driver required

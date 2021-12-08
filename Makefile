@@ -3,7 +3,7 @@ LD = ld
 OBJCOPY = objcopy
 DD = dd
 export CFLAGS = \
-	-Os \
+	-O2 \
 	-fno-stack-protector \
 	-I.. \
 	-fno-asynchronous-unwind-tables \
@@ -17,8 +17,7 @@ export CFLAGS = \
 	-pedantic \
 	-Wall \
 	-Wextra \
-	-W \
-	-Werror
+	-W 
 LDFLAGS = -m elf_i386 -T setup.ld
 OCFLAGS = -O binary
 RM = rm -f

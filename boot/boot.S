@@ -50,7 +50,7 @@ movw $s_a20_givenup, %si
 call bios_printzln
 jmp cpu_halt
 
-load_kernel: #also load kernel data
+load_kernel:
 movw $0x202, %ax
 movw $2, %cx
 xorb %dh, %dh
