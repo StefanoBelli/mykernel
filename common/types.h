@@ -6,6 +6,6 @@
 typedef struct {
 	mykt_uint_32 x;
 	mykt_uint_32 y;
-} mykt_pair32;
+} mykt_pair_uint_32;
 
 #endif
