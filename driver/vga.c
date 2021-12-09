@@ -1,9 +1,14 @@
 #include <x86/x86.h>
 #include "vga.h"
 
+#define framebuf(x, y) *((mykt_int_16*)(0xb8000 + ((y * VGA_WIDTH + x) << 1))) 
+
+mykt_int_16 vga_text_getc(mykt_uint_32 x, mykt_uint_32 y) {
+	return framebuf(x,y);
+}
+
 void vga_text_putc(mykt_int_8 ch, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_32 x, mykt_uint_32 y) {
-	mykt_int_16 fbch = ((bg << 4) | (fg & 0x0f) << 8) | ch;
-	*((mykt_int_16*)(0xb8000 + ((y * VGA_WIDTH + x) << 1))) = fbch;
+	framebuf(x,y) = (mykt_int_16) (((bg << 4) | (fg & 0x0f) << 8) | ch);
 }
 
 void vga_cursor_enable(mykt_uint_8 cursor_start, mykt_uint_8 cursor_end) {

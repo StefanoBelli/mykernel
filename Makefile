@@ -3,7 +3,7 @@ LD = ld
 OBJCOPY = objcopy
 DD = dd
 export CFLAGS = \
-	-O0 \
+	-O2 \
 	-fno-stack-protector \
 	-I.. \
 	-fno-asynchronous-unwind-tables \

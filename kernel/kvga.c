@@ -4,7 +4,15 @@
 static mykt_uint_32 ix;
 static mykt_uint_32 jy;
 
-void kvga_write(const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_64 len) {
+void kvga_set_start_pos() {
+	mykt_pair_uint_32 start_pos = vga_cursor_get_pos();
+	ix = start_pos.x;
+	jy = start_pos.y;
+}
+
+void kvga_write(const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_64 len, 
+		void(*max_height_handle_policy)(mykt_int_8, mykt_int_8)) {
+
 	for(mykt_uint_64 i = 0; i < len; ++i) {
 		if(ix >= VGA_WIDTH) {
 			ix = 0;
@@ -12,7 +20,7 @@ void kvga_write(const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_
 		}
 
 		if(jy >= VGA_HEIGHT) {
-			kvga_clear(bg, fg);
+			max_height_handle_policy(bg, fg);
 		}
 
 		if(data[i] == '\n') {
@@ -50,4 +58,20 @@ void kvga_clear(mykt_int_8 bg, mykt_int_8 fg) {
 
 	ix = 0;
 	jy = 0;
+}
+
+void kvga_scroll(mykt_int_8 bg, mykt_int_8 fg) {
+	for(mykt_uint_64 k = 0; k < VGA_WIDTH; ++k) {
+		for(mykt_uint_64 t = 1; t < VGA_HEIGHT; ++t) {
+			mykt_int_8 ch = vga_text_getc(k, t) & 0xff;
+			vga_text_putc(ch, bg, fg, k, t - 1);
+		}
+	}
+	
+	for (mykt_uint_64 k = 0; k < VGA_WIDTH; ++k) {
+		vga_text_putc(' ', bg, fg, k, VGA_HEIGHT - 1);
+	}
+
+	ix = 0;
+	jy = VGA_HEIGHT - 1;
 }
