@@ -25,5 +25,7 @@ typedef enum {
 
 void kvga_write(const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_64 len);
 void kvga_cursor(mykt_uint_8 cur_start, mykt_uint_8 cur_end);
+void kvga_update_cursor();
+void kvga_clear(mykt_int_8 bg, mykt_int_8 fg);
 
 #endif
