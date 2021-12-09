@@ -2,6 +2,7 @@
 #define KVGA_MYKERNEL_H
 
 #include <x86/types.h>
+#include <common/gcc.h>
 
 typedef enum {
 	VGA_TEXT_COLOR_BLACK,
@@ -22,13 +23,13 @@ typedef enum {
 	VGA_TEXT_COLOR_WHITE
 } mykt_kvga_text_color;
 
-void kvga_set_start_pos();
-void kvga_write(
+__mykapi void kvga_set_start_pos();
+__mykapi void kvga_write(
 		const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_64 len, 
 		void(*max_height_handle_policy)(mykt_int_8, mykt_int_8));
-void kvga_cursor(mykt_uint_8 cur_start, mykt_uint_8 cur_end);
-void kvga_update_cursor();
-void kvga_clear(mykt_int_8 bg, mykt_int_8 fg);
-void kvga_scroll(mykt_int_8 bg, mykt_int_8 fg);
+__mykapi void kvga_cursor(mykt_uint_8 cur_start, mykt_uint_8 cur_end);
+__mykapi void kvga_update_cursor();
+__mykapi void kvga_clear(mykt_int_8 bg, mykt_int_8 fg);
+__mykapi void kvga_scroll(mykt_int_8 bg, mykt_int_8 fg);
 
 #endif

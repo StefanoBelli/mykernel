@@ -2,15 +2,16 @@
 #define VGA_MYKERNEL_H
 
 #include <common/types.h>
+#include <common/gcc.h>
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
 
-mykt_int_16 vga_text_getc(mykt_uint_32 x, mykt_uint_32 y);
-void vga_text_putc(mykt_int_8 ch, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_32 x, mykt_uint_32 y);
-void vga_cursor_enable(mykt_uint_8 cursor_start, mykt_uint_8 cursor_end);
-void vga_cursor_disable();
-void vga_cursor_set_pos(mykt_uint_32 x, mykt_uint_32 y);
-mykt_pair_uint_32 vga_cursor_get_pos();
+__mykapi mykt_int_16 vga_text_getc(mykt_uint_32 x, mykt_uint_32 y);
+__mykapi void vga_text_putc(mykt_int_8 ch, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_32 x, mykt_uint_32 y);
+__mykapi void vga_cursor_enable(mykt_uint_8 cursor_start, mykt_uint_8 cursor_end);
+__mykapi void vga_cursor_disable();
+__mykapi void vga_cursor_set_pos(mykt_uint_32 x, mykt_uint_32 y);
+__mykapi mykt_pair_uint_32 vga_cursor_get_pos();
 
 #endif

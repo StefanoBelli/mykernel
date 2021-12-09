@@ -1,6 +1,7 @@
 #ifndef MYKERNEL_X86_H
 #define MYKERNEL_X86_H
 
+#include <common/gcc.h>
 #include "types.h"
 
 #define x86_cli() \
@@ -12,7 +13,7 @@
 #define x86_sti() \
 	__asm__ __volatile__ ("sti;")
 
-void x86_outb(mykt_int_16 port, mykt_int_8 data);
-mykt_int_8 x86_inb(mykt_int_16 port);
+__mykapi void x86_outb(mykt_int_16 port, mykt_int_8 data);
+__mykapi mykt_int_8 x86_inb(mykt_int_16 port);
 
 #endif
