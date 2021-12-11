@@ -1,7 +1,7 @@
 #ifndef MYKERNEL_X86_H
 #define MYKERNEL_X86_H
 
-#include <common/gcc.h>
+#include <misc/gcc.h>
 #include "types.h"
 
 #define x86_cli() \

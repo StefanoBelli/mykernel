@@ -11,6 +11,7 @@ SECTIONS {
 		kernel/kvga.o (.text)
 		driver/vga.o (.text)
 		x86/x86.o (.text)
+		misc/itoa.o (.text)
 	}
 
 	/*

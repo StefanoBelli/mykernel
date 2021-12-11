@@ -1,8 +1,8 @@
 #ifndef VGA_MYKERNEL_H
 #define VGA_MYKERNEL_H
 
-#include <common/types.h>
-#include <common/gcc.h>
+#include <misc/types.h>
+#include <misc/gcc.h>
 
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25

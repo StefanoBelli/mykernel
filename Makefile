@@ -24,7 +24,7 @@ RM = rm -f
 MYKERNEL_ELF = mykernel.elf
 MYKERNEL_BIN = mykernel.bin
 MYKERNEL_IMG = mykernel.img
-SUBDIRS = boot kernel driver x86
+SUBDIRS = boot kernel driver x86 misc
 
 all:
 	@for subdir in $(SUBDIRS); do \
