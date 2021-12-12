@@ -34,19 +34,19 @@ __mykapi void vga_cursor_set_pos(mykt_uint_32 x, mykt_uint_32 y) {
 }
 
 __mykapi mykt_pair_uint_32 vga_cursor_get_pos() {
-    mykt_uint_16 pos = 0;
+	mykt_uint_16 pos = 0;
 
-    x86_outb(0x3d4, 0x0f);
-    pos |= x86_inb(0x3d5);
+	x86_outb(0x3d4, 0x0f);
+	pos |= x86_inb(0x3d5);
 
-    x86_outb(0x3d4, 0x0e);
-    pos |= ((mykt_uint_16) x86_inb(0x3d5)) << 8;
-    
-    mykt_pair_uint_32 coord;
-    coord.x = pos % VGA_WIDTH;
-    coord.y = pos / VGA_WIDTH;
+	x86_outb(0x3d4, 0x0e);
+	pos |= ((mykt_uint_16) x86_inb(0x3d5)) << 8;
 
-    return coord;
+	mykt_pair_uint_32 coord;
+	coord.x = pos % VGA_WIDTH;
+	coord.y = pos / VGA_WIDTH;
+
+	return coord;
 }
 
 
