@@ -8,8 +8,7 @@ __mykapi mykt_int_32 myk_strncpy(mykt_int_8* src, mykt_int_8* dst, mykt_int_32 d
 	return wrote;
 }
 
-#define nextarg(type) \
-	((type) *((int*) &fmt + argoff))
+#define nextarg(type) ((type) *((int*) &fmt + argoff))
 #define nextarg_s() nextarg(mykt_int_8*)
 #define nextarg_c() nextarg(mykt_int_8)
 #define nextarg_ul_hex() ultoa(nextarg(mykt_uint_32), auxbuf, 16)
@@ -20,7 +19,6 @@ __mykapi mykt_int_32 myk_strncpy(mykt_int_8* src, mykt_int_8* dst, mykt_int_32 d
 #define nextarg_ub_bin() ubtoa(nextarg(mykt_uint_8), auxbuf, 2)
 #define nextarg_ui_dec() ultoa(nextarg(mykt_uint_32), auxbuf, 10)
 #define nextarg_si_dec() ltoa(nextarg(mykt_int_32), auxbuf)
-
 #define buf_app_s(s) (buf += myk_strncpy(s, buf, maxlen))
 #define buf_app_c(c) (*buf++ = c)
 	
@@ -106,3 +104,5 @@ mykt_int_32 myk_snprintf(mykt_int_8* buf, mykt_int_32 bufsiz, const mykt_int_8* 
 #undef nextarg_ub_bin
 #undef nextarg_si_dec
 #undef nextarg_ui_dec
+#undef buf_app_s
+#undef buf_app_c

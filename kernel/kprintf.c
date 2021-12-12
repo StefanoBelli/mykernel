@@ -1,19 +1,31 @@
+#include <misc/string.h>
+#include "kvga.h"
 #include "kprintf.h"
 
-/*
- * %%: %
- * %c: char
- * %s: NUL-terminated string
- * %p: 32-bit pointer (0xdeadcode)
- * %x: 32-bit unsigned hexadecimal integer (lowercase)
- * %b: 32-bit unsigned binary integer
- * %a: 16-bit unsigned hexadecimal integer (lowercase)
- * %r: 16-bit unsigned binary integer
- * %o: 8-bit unsigned hexadecimal integer (lowercase)
- * %g: 8-bit unsigned binary integer
- * %d: decimal integer
- * %u: unsigned decimal integer
- */
+#define BUFSIZE 8192
+
+typedef struct __buffer {
+	mykt_int_8 data[BUFSIZE];
+	mykt_int_32 len;
+	void (*flush)(struct __buffer*);
+	void (*write)(mykt_int_8*, mykt_int_32, struct __buffer*);
+} buffer;
+
+static __mykapi void __buffer_flush(buffer* buf) {
+	if(buf->len > 0) {
+		kvga_write(buf->data, VGA_TEXT_COLOR_BLACK, VGA_TEXT_COLOR_WHITE, buf->len, kvga_scroll);
+		buf->len = 0;
+	}
+}
+
+static __mykapi void __buffer_write(mykt_int_8* src, mykt_int_32 len, buffer* buf) {
+
+}
+
 mykt_int_32 kprintf(const mykt_int_8* fmt, ...) {
 	return 0;
+}
+
+void kprintf_init() {
+
 }

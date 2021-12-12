@@ -9,6 +9,7 @@ SECTIONS {
 	kernel.text 0x100000 : AT (0x200) {
 		kernel/kmain.o (.text)
 		kernel/kvga.o (.text)
+		kernel/kprintf.o (.text)
 		driver/vga.o (.text)
 		x86/x86.o (.text)
 		misc/itoa.o (.text)

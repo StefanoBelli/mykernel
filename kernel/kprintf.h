@@ -18,5 +18,6 @@
  * %u: unsigned decimal integer
  */
 mykt_int_32 kprintf(const mykt_int_8* fmt, ...);
+void kprintf_init();
 
 #endif
