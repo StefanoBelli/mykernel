@@ -12,6 +12,7 @@ SECTIONS {
 		driver/vga.o (.text)
 		x86/x86.o (.text)
 		misc/itoa.o (.text)
+		misc/string.o (.text)
 	}
 
 	/*

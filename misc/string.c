@@ -10,7 +10,6 @@ __mykapi mykt_int_32 myk_strncpy(mykt_int_8* src, mykt_int_8* dst, mykt_int_32 d
 
 #define nextarg(type) \
 	((type) *((int*) &fmt + argoff))
-
 #define nextarg_s() nextarg(mykt_int_8*)
 #define nextarg_c() nextarg(mykt_int_8)
 #define nextarg_ul_hex() ultoa(nextarg(mykt_uint_32), auxbuf, 16)
@@ -22,6 +21,9 @@ __mykapi mykt_int_32 myk_strncpy(mykt_int_8* src, mykt_int_8* dst, mykt_int_32 d
 #define nextarg_ui_dec() ultoa(nextarg(mykt_uint_32), auxbuf, 10)
 #define nextarg_si_dec() ltoa(nextarg(mykt_int_32), auxbuf)
 
+#define buf_app_s(s) (buf += myk_strncpy(s, buf, maxlen))
+#define buf_app_c(c) (*buf++ = c)
+	
 /*
  * %%: %
  * %c: char
@@ -47,43 +49,49 @@ mykt_int_32 myk_snprintf(mykt_int_8* buf, mykt_int_32 bufsiz, const mykt_int_8* 
 	while((wrote = buf - startbuf) < bufsiz && *fmt) {
 		if(*fmt == '%') {
 			mykt_int_32 maxlen = bufsiz - wrote;
-			mykt_int_8 ch = *++fmt;
+			mykt_int_8 fmtch = *++fmt;
 
-			if(ch == '%') {
-				*buf++ = '%';
-			} else if(ch == 'c') {
-				*buf++ = nextarg_c();
-			} else if(ch == 's') {
-				buf += myk_strncpy(nextarg_s(), buf, maxlen);
-			} else if(ch == 'p') {
-				buf += myk_strncpy("0x", buf, maxlen);
-				buf += myk_strncpy(nextarg_ul_hex(), buf, maxlen);
-			} else if(ch == 'x') {
-				buf += myk_strncpy(nextarg_ul_hex(), buf, maxlen);
-			} else if(ch == 'b') {
-				buf += myk_strncpy(nextarg_ul_bin(), buf, maxlen);
-			} else if(ch == 'a') {
-				buf += myk_strncpy(nextarg_us_hex(), buf, maxlen);
-			} else if(ch == 'r') {
-				buf += myk_strncpy(nextarg_us_bin(), buf, maxlen);
-			} else if(ch == 'o') {
-				buf += myk_strncpy(nextarg_ub_hex(), buf, maxlen);
-			} else if(ch == 'g') {
-				buf += myk_strncpy(nextarg_ub_bin(), buf, maxlen);
-			} else if(ch == 'd') {
-				buf += myk_strncpy(nextarg_si_dec(), buf, maxlen);
-			} else if(ch == 'u') {
-				buf += myk_strncpy(nextarg_ui_dec(), buf, maxlen);
+			if(fmtch == '%') {
+				buf_app_c('%');
+			} else if(fmtch == 'c') {
+				buf_app_c(nextarg_c());
+			} else if(fmtch == 's') {
+				buf_app_s(nextarg_s());
+			} else if(fmtch == 'p') {
+				buf_app_s("0x");
+				buf_app_s(nextarg_ul_hex());
+			} else if(fmtch == 'x') {
+				buf_app_s(nextarg_ul_hex());
+			} else if(fmtch == 'b') {
+				buf_app_s(nextarg_ul_bin());
+			} else if(fmtch == 'a') {
+				buf_app_s(nextarg_us_hex());
+			} else if(fmtch == 'r') {
+				buf_app_s(nextarg_us_bin());
+			} else if(fmtch == 'o') {
+				buf_app_s(nextarg_ub_hex());
+			} else if(fmtch == 'g') {
+				buf_app_s(nextarg_ub_bin());
+			} else if(fmtch == 'd') {
+				buf_app_s(nextarg_si_dec());
+			} else if(fmtch == 'u') {
+				buf_app_s(nextarg_ui_dec());
 			} else {
-				buf += myk_strncpy("(invalid)", buf, maxlen);
+				buf_app_s("(invalidfmt)");
 			}
 			
 			++argoff;
 		} else {
-			*buf++ = *fmt++;
+			buf_app_c(*fmt);
 		}
+
+		++fmt;
 	}
 	
+	if(wrote < bufsiz) {
+		*buf = 0;
+	}
+
 	return wrote;
 }
 

@@ -26,7 +26,7 @@ typedef enum {
 __mykapi void kvga_set_start_pos();
 __mykapi void kvga_write(
 		const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_32 len, 
-		void(*max_height_handle_policy)(mykt_int_8, mykt_int_8));
+		__mykapi void(*max_height_handle_policy)(mykt_int_8, mykt_int_8));
 __mykapi void kvga_cursor(mykt_uint_8 cur_start, mykt_uint_8 cur_end);
 __mykapi void kvga_update_cursor();
 __mykapi void kvga_clear(mykt_int_8 bg, mykt_int_8 fg);
