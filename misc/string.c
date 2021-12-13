@@ -1,7 +1,7 @@
 #include "itoa.h"
 #include "string.h"
 
-__mykapi mykt_int_32 myk_strncpy(mykt_int_8* src, mykt_int_8* dst, mykt_int_32 dstlen) {
+__mykapi mykt_int_32 myk_strncpy(const mykt_int_8* src, mykt_int_8* dst, mykt_int_32 dstlen) {
 	const mykt_int_8* startsrc = src;
 	mykt_int_32 wrote;
 	while(((wrote = src - startsrc) < dstlen && (*dst++ = *src++))){}
@@ -106,3 +106,14 @@ mykt_int_32 myk_snprintf(mykt_int_8* buf, mykt_int_32 bufsiz, const mykt_int_8* 
 #undef nextarg_ui_dec
 #undef buf_app_s
 #undef buf_app_c
+
+__mykapi mykt_int_8* myk_str_tok(mykt_int_8* buf, mykt_int_8 tok) {
+	for(;*buf++;) {
+		if(*buf == tok) {
+			return buf;
+		}
+	}
+
+	return (mykt_int_8*) 0;
+}
+

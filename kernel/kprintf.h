@@ -1,7 +1,11 @@
 #ifndef MYKERNEL_KPRINTF_H
 #define MYKERNEL_KPRINTF_H
 
+#include <misc/gcc.h>
 #include <misc/types.h>
+
+typedef void(*__mykapi output_printer_fp)(const mykt_int_8*, mykt_int_32);
+typedef void(*__mykapi your_init_steps_fp)();
 
 /*
  * %%: %
@@ -18,6 +22,7 @@
  * %u: unsigned decimal integer
  */
 mykt_int_32 kprintf(const mykt_int_8* fmt, ...);
-void kprintf_init();
+__mykapi void kprintf_init(output_printer_fp print, your_init_steps_fp more_steps);
+__mykapi void kprintf_flush();
 
 #endif
