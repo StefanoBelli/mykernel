@@ -32,13 +32,13 @@ static __mykapi void __buffer_write(mykt_int_8* src, mykt_int_32 len, buffer* bu
 	}
 	
 	mykt_int_8* last = src;
-    const mykt_int_8* origin = src;
+	const mykt_int_8* origin = src;
 
-    while((src = myk_str_tok(src, '\n'))) {
-    	buf->flush(buf);
-        buf->print(last, src - last + 1);
-        last = src + 1;
-    }
+	while((src = myk_str_tok(src, '\n'))) {
+		buf->flush(buf);
+		buf->print(last, src - last + 1);
+		last = src + 1;
+	}
 
 	mykt_int_32 applen = len - (mykt_int_32) last + (mykt_int_32) origin;
 	buf->append(last, applen, buf);
