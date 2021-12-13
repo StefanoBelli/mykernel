@@ -44,9 +44,16 @@ static __mykapi void __buffer_write(mykt_int_8* src, mykt_int_32 len, buffer* bu
 	buf->append(last, applen, buf);
 }
 
+//#include "kvga.h"
+
 /* exposed */
 mykt_int_32 kprintf(const mykt_int_8* fmt, ...) {
-	return 0;
+/*
+	char buf[100];
+	int w = myk_vsnprintf(buf, 100, fmt, &fmt + 1);
+	kvga_write(buf, VGA_TEXT_COLOR_BLACK, VGA_TEXT_COLOR_WHITE, w, kvga_scroll);
+	return w;
+*/
 }
 
 __mykapi void kprintf_init(output_printer_fp print, your_init_steps_fp more_steps) {

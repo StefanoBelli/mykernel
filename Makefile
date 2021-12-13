@@ -7,6 +7,7 @@ export CFLAGS = \
 	-fno-stack-protector \
 	-I.. \
 	-fno-asynchronous-unwind-tables \
+	-fno-inline \
 	-nostdinc \
 	-nostdlib \
 	-m32 \

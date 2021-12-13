@@ -8,7 +8,7 @@ __mykapi mykt_int_32 myk_strncpy(const mykt_int_8* src, mykt_int_8* dst, mykt_in
 	return wrote;
 }
 
-#define nextarg(type) ((type) *((int*) &fmt + argoff))
+#define nextarg(type) ((type) *((mykt_int_32*) args + argoff))
 #define nextarg_s() nextarg(mykt_int_8*)
 #define nextarg_c() nextarg(mykt_int_8)
 #define nextarg_ul_hex() ultoa(nextarg(mykt_uint_32), auxbuf, 16)
@@ -35,13 +35,11 @@ __mykapi mykt_int_32 myk_strncpy(const mykt_int_8* src, mykt_int_8* dst, mykt_in
  * %g: 8-bit unsigned binary integer
  * %d: decimal integer
  * %u: unsigned decimal integer
- * 
- * null-termination?
  */
-mykt_int_32 myk_snprintf(mykt_int_8* buf, mykt_int_32 bufsiz, const mykt_int_8* fmt, ...) {
+__mykapi mykt_int_32 myk_vsnprintf(mykt_int_8* buf, mykt_int_32 bufsiz, const mykt_int_8* fmt, void* args) {
 	const mykt_int_8* startbuf = buf;
 	mykt_int_32 wrote = 0;
-	mykt_int_32 argoff = 1;
+	mykt_int_32 argoff = 0;
 	char auxbuf[33]; //needed for nextarg_* macro expansion
 
 	while((wrote = buf - startbuf) < bufsiz && *fmt) {
