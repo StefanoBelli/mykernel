@@ -19,9 +19,10 @@ __mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
 
 void kmain() {
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
-	kprintf("we coglione");
-	kprintf("come stai testa di minchiaaa\naa");
-	kprintf_flush();
+	kprintf("kmain@%p: we're in protected mode!\n", kmain);
+	kprintf("kmain@%p: kernel entry point reached\n", kmain);
+	
+	kprintf("kmain@%p: cpu halt\n", kmain);
 	x86_cli();
 	x86_hlt();
 }

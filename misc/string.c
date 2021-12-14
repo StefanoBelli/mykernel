@@ -106,8 +106,8 @@ __mykapi mykt_uint_32 myk_vsnprintf(mykt_int_8* buf, mykt_uint_32 bufsiz, const 
 #undef buf_app_c
 
 __mykapi mykt_int_8* myk_str_tok(mykt_int_8* buf, mykt_int_8 tok) {
-	for(;*buf++;) {
-		if(*buf == tok) {
+	for(mykt_int_8 ch; (ch = *buf++);) {
+		if(ch == tok) {
 			return buf;
 		}
 	}
