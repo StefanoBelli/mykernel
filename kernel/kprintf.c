@@ -25,17 +25,20 @@ static __mykapi void __buffer_append(mykt_int_8* src, mykt_uint_32 len, buffer* 
 }
 
 static __mykapi void __buffer_write(mykt_int_8* src, mykt_uint_32 len, buffer* buf) {
-	if(buf->len + len > KPRINTF_BUFSIZE) {
+	if(unlikely(buf->len + len > KPRINTF_BUFSIZE)) {
 		buf->flush(buf);
 	}
 
 	mykt_int_8* last = src;
 	const mykt_int_8* origin = src;
 
-	while((src = myk_str_tok(src, '\n'))) {
+	if(likely((src = myk_str_tok(src, '\n')) != (mykt_int_8*)0)) {
 		buf->flush(buf);
-		buf->print(last, (mykt_uint_32) (src - last));
-		last = src;
+
+		do {
+			buf->print(last, (mykt_uint_32) (src - last));
+			last = src;
+		} while((src = myk_str_tok(src, '\n')));
 	}
 
 	mykt_uint_32 applen = len - (mykt_uint_32) last + (mykt_uint_32) origin;

@@ -22,6 +22,7 @@ void kmain() {
 	kprintf("kmain@%p: we're in protected mode!\n", kmain);
 	kprintf("kmain@%p: kernel entry point reached\n", kmain);
 	kprintf("kmain@%p: cpu halt\n", kmain);
+
 	x86_cli();
 	x86_hlt();
 }
