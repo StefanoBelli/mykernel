@@ -1,10 +1,8 @@
 #include <misc/string.h>
 #include "kprintf.h"
 
-#define BUFSIZE 8192
-
 typedef struct __buffer {
-	mykt_int_8 data[BUFSIZE];
+	mykt_int_8 data[KPRINTF_BUFSIZE];
 	mykt_uint_32 len;
 	output_printer_fp print;
 	void (*__mykapi flush)(struct __buffer*);
@@ -27,7 +25,7 @@ static __mykapi void __buffer_append(mykt_int_8* src, mykt_uint_32 len, buffer* 
 }
 
 static __mykapi void __buffer_write(mykt_int_8* src, mykt_uint_32 len, buffer* buf) {
-	if(buf->len + len > BUFSIZE) {
+	if(buf->len + len > KPRINTF_BUFSIZE) {
 		buf->flush(buf);
 	}
 	
@@ -46,8 +44,8 @@ static __mykapi void __buffer_write(mykt_int_8* src, mykt_uint_32 len, buffer* b
 
 /* exposed */
 mykt_uint_32 kprintf(const mykt_int_8* fmt, ...) {
-	mykt_int_8 local_buf[BUFSIZE];
-	mykt_uint_32 wrote = myk_vsnprintf(local_buf, BUFSIZE, fmt, &fmt + 1);
+	mykt_int_8 local_buf[KPRINTF_BUFSIZE];
+	mykt_uint_32 wrote = myk_vsnprintf(local_buf, KPRINTF_BUFSIZE, fmt, &fmt + 1);
 	kprintf_buffer.write(local_buf, wrote, &kprintf_buffer);
 
 	return wrote;

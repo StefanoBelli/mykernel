@@ -42,7 +42,7 @@ __mykapi mykt_uint_32 myk_vsnprintf(mykt_int_8* buf, mykt_uint_32 bufsiz, const 
 	mykt_int_32 argoff = 0;
 	char auxbuf[33]; //needed for nextarg_* macro expansion
 
-	while((wrote = (mykt_uint_32) (buf - startbuf) < bufsiz && *fmt)) {
+	while((wrote = (mykt_uint_32) (buf - startbuf)) < bufsiz && *fmt) {
 		if(*fmt == '%') {
 			mykt_uint_32 maxlen = bufsiz - wrote;
 			mykt_int_8 fmtch = *++fmt;
