@@ -5,11 +5,11 @@
 
 typedef struct __buffer {
 	mykt_int_8 data[BUFSIZE];
-	mykt_int_32 len;
+	mykt_uint_32 len;
 	output_printer_fp print;
 	void (*__mykapi flush)(struct __buffer*);
-	void (*__mykapi write)(mykt_int_8*, mykt_int_32, struct __buffer*);
-	void (*__mykapi append)(mykt_int_8*, mykt_int_32, struct __buffer*);
+	void (*__mykapi write)(mykt_int_8*, mykt_uint_32, struct __buffer*);
+	void (*__mykapi append)(mykt_int_8*, mykt_uint_32, struct __buffer*);
 } buffer;
 
 static buffer kprintf_buffer;
@@ -21,12 +21,12 @@ static __mykapi void __buffer_flush(buffer* buf) {
 	}
 }
 
-static __mykapi void __buffer_append(mykt_int_8* src, mykt_int_32 len, buffer* buf) {
+static __mykapi void __buffer_append(mykt_int_8* src, mykt_uint_32 len, buffer* buf) {
 	myk_strncpy(src, buf->data + buf->len, len);
 	buf->len += len;
 }
 
-static __mykapi void __buffer_write(mykt_int_8* src, mykt_int_32 len, buffer* buf) {
+static __mykapi void __buffer_write(mykt_int_8* src, mykt_uint_32 len, buffer* buf) {
 	if(buf->len + len > BUFSIZE) {
 		buf->flush(buf);
 	}
@@ -36,25 +36,21 @@ static __mykapi void __buffer_write(mykt_int_8* src, mykt_int_32 len, buffer* bu
 
 	while((src = myk_str_tok(src, '\n'))) {
 		buf->flush(buf);
-		buf->print(last, src - last + 1);
+		buf->print(last, (mykt_uint_32) (src - last + 1));
 		last = src + 1;
 	}
 
-	mykt_int_32 applen = len - (mykt_int_32) last + (mykt_int_32) origin;
+	mykt_uint_32 applen = len - (mykt_uint_32) last + (mykt_uint_32) origin;
 	buf->append(last, applen, buf);
 }
 
-//#include "kvga.h"
-
 /* exposed */
-mykt_int_32 kprintf(const mykt_int_8* fmt, ...) {
-/*
-	char buf[100];
-	int w = myk_vsnprintf(buf, 100, fmt, &fmt + 1);
-	kvga_write(buf, VGA_TEXT_COLOR_BLACK, VGA_TEXT_COLOR_WHITE, w, kvga_scroll);
-	return w;
-*/
-	return 0;
+mykt_uint_32 kprintf(const mykt_int_8* fmt, ...) {
+	mykt_int_8 local_buf[BUFSIZE];
+	mykt_uint_32 wrote = myk_vsnprintf(local_buf, BUFSIZE, fmt, &fmt + 1);
+	kprintf_buffer.write(local_buf, wrote, &kprintf_buffer);
+
+	return wrote;
 }
 
 __mykapi void kprintf_init(output_printer_fp print, your_init_steps_fp more_steps) {

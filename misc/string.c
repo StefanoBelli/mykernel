@@ -1,10 +1,10 @@
 #include "itoa.h"
 #include "string.h"
 
-__mykapi mykt_int_32 myk_strncpy(const mykt_int_8* src, mykt_int_8* dst, mykt_int_32 dstlen) {
+__mykapi mykt_uint_32 myk_strncpy(const mykt_int_8* src, mykt_int_8* dst, mykt_uint_32 dstlen) {
 	const mykt_int_8* startsrc = src;
-	mykt_int_32 wrote;
-	while(((wrote = src - startsrc) < dstlen && (*dst++ = *src++))){}
+	mykt_uint_32 wrote;
+	while(((wrote = (mykt_uint_32) (src - startsrc)) < dstlen && (*dst++ = *src++))){}
 	return wrote;
 }
 
@@ -36,15 +36,15 @@ __mykapi mykt_int_32 myk_strncpy(const mykt_int_8* src, mykt_int_8* dst, mykt_in
  * %d: decimal integer
  * %u: unsigned decimal integer
  */
-__mykapi mykt_int_32 myk_vsnprintf(mykt_int_8* buf, mykt_int_32 bufsiz, const mykt_int_8* fmt, void* args) {
+__mykapi mykt_uint_32 myk_vsnprintf(mykt_int_8* buf, mykt_uint_32 bufsiz, const mykt_int_8* fmt, void* args) {
 	const mykt_int_8* startbuf = buf;
-	mykt_int_32 wrote = 0;
+	mykt_uint_32 wrote = 0;
 	mykt_int_32 argoff = 0;
 	char auxbuf[33]; //needed for nextarg_* macro expansion
 
-	while((wrote = buf - startbuf) < bufsiz && *fmt) {
+	while((wrote = (mykt_uint_32) (buf - startbuf) < bufsiz && *fmt)) {
 		if(*fmt == '%') {
-			mykt_int_32 maxlen = bufsiz - wrote;
+			mykt_uint_32 maxlen = bufsiz - wrote;
 			mykt_int_8 fmtch = *++fmt;
 
 			if(fmtch == '%') {

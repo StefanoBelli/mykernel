@@ -4,7 +4,7 @@
 #include <misc/gcc.h>
 #include <misc/types.h>
 
-typedef void(*__mykapi output_printer_fp)(const mykt_int_8*, mykt_int_32);
+typedef void(*__mykapi output_printer_fp)(const mykt_int_8*, mykt_uint_32);
 typedef void(*__mykapi your_init_steps_fp)();
 
 /*
@@ -21,7 +21,7 @@ typedef void(*__mykapi your_init_steps_fp)();
  * %d: decimal integer
  * %u: unsigned decimal integer
  */
-mykt_int_32 kprintf(const mykt_int_8* fmt, ...);
+mykt_uint_32 kprintf(const mykt_int_8* fmt, ...);
 __mykapi void kprintf_init(output_printer_fp print, your_init_steps_fp more_steps);
 __mykapi void kprintf_flush();
 
