@@ -25,7 +25,7 @@ static __mykapi void __buffer_append(mykt_int_8* src, mykt_uint_32 len, buffer* 
 }
 
 static __mykapi void __buffer_write(mykt_int_8* src, mykt_uint_32 len, buffer* buf) {
-	if(unlikely(buf->len + len > KPRINTF_BUFSIZE)) {
+	if(buf->len + len > KPRINTF_BUFSIZE) {
 		buf->flush(buf);
 	}
 

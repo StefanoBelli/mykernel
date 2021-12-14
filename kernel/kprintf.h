@@ -4,7 +4,7 @@
 #include <misc/gcc.h>
 #include <misc/types.h>
 
-#define KPRINTF_BUFSIZE 2048
+#define KPRINTF_BUFSIZE 512
 
 typedef void(*__mykapi output_printer_fp)(const mykt_int_8*, mykt_uint_32);
 typedef void(*__mykapi your_init_steps_fp)();
