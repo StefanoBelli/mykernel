@@ -6,8 +6,8 @@ static mykt_uint_16 jy;
 
 __mykapi void kvga_set_start_pos() {
 	mykt_pair_uint_16 start_pos = vga_cursor_get_pos();
-	ix = start_pos.x;
-	jy = start_pos.y;
+	ix = 0;
+	jy = start_pos.y + 1;
 }
 
 __mykapi void kvga_write(const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_32 len, 

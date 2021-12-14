@@ -19,6 +19,9 @@ __mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
 
 void kmain() {
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
+	/* buggy printf case */
+	kprintf("kprintf is buggy\n");
+	kprintf("cpu fault after this call\n");
 
 	x86_cli();
 	x86_hlt();
