@@ -19,7 +19,7 @@ __mykapi mykt_int_8* ltoa(mykt_int_32 value, mykt_int_8* buf) {
 
 	mykt_int_32 i;
 	for (i = numlen - 1 + sign; i >= sign; --i) {
-		buf[i] = (oldvalue % 10) + 48;
+		buf[i] = (mykt_int_8) (oldvalue % 10) + 48;
 		oldvalue /= 10;
 	}
 
@@ -31,7 +31,7 @@ __mykapi mykt_int_8* ltoa(mykt_int_32 value, mykt_int_8* buf) {
 }
 
 /* unsigned */
-__mykapi mykt_int_8* ultoa(mykt_uint_32 value, mykt_int_8* buf, mykt_int_32 base) {
+__mykapi mykt_int_8* ultoa(mykt_uint_32 value, mykt_int_8* buf, mykt_uint_8 base) {
 	mykt_int_32 numlen = 0;
 	mykt_uint_32 oldvalue = value;
 
@@ -42,15 +42,15 @@ __mykapi mykt_int_8* ultoa(mykt_uint_32 value, mykt_int_8* buf, mykt_int_32 base
 	buf[numlen] = 0;
 
 	for (mykt_int_32 i = numlen - 1; i >= 0; --i) {
-		mykt_int_32 rem = oldvalue % base;
-		buf[i] = rem > 9 ? rem + 87 : rem + 48;
+		mykt_uint_32 rem = oldvalue % base;
+		buf[i] = (mykt_int_8) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 
 	return buf;
 }
 
-__mykapi mykt_int_8* ustoa(mykt_uint_16 value, mykt_int_8* buf, mykt_int_32 base) {
+__mykapi mykt_int_8* ustoa(mykt_uint_16 value, mykt_int_8* buf, mykt_uint_8 base) {
 	mykt_int_32 numlen = 0;
 	mykt_uint_16 oldvalue = value;
 
@@ -61,15 +61,15 @@ __mykapi mykt_int_8* ustoa(mykt_uint_16 value, mykt_int_8* buf, mykt_int_32 base
 	buf[numlen] = 0;
 
 	for (mykt_int_32 i = numlen - 1; i >= 0; --i) {
-		mykt_int_32 rem = oldvalue % base;
-		buf[i] = rem > 9 ? rem + 87 : rem + 48;
+		mykt_uint_32 rem = oldvalue % base;
+		buf[i] = (mykt_int_8) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 
 	return buf;
 }
 
-__mykapi mykt_int_8* ubtoa(mykt_uint_8 value, mykt_int_8* buf, mykt_int_32 base) {
+__mykapi mykt_int_8* ubtoa(mykt_uint_8 value, mykt_int_8* buf, mykt_uint_8 base) {
 	mykt_int_32 numlen = 0;
 	mykt_uint_8 oldvalue = value;
 
@@ -80,8 +80,8 @@ __mykapi mykt_int_8* ubtoa(mykt_uint_8 value, mykt_int_8* buf, mykt_int_32 base)
 	buf[numlen] = 0;
 
 	for (mykt_int_32 i = numlen - 1; i >= 0; --i) {
-		mykt_int_32 rem = oldvalue % base;
-		buf[i] = rem > 9 ? rem + 87 : rem + 48;
+		mykt_uint_32 rem = oldvalue % base;
+		buf[i] = (mykt_int_8) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 

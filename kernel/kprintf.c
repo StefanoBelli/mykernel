@@ -54,6 +54,7 @@ mykt_int_32 kprintf(const mykt_int_8* fmt, ...) {
 	kvga_write(buf, VGA_TEXT_COLOR_BLACK, VGA_TEXT_COLOR_WHITE, w, kvga_scroll);
 	return w;
 */
+	return 0;
 }
 
 __mykapi void kprintf_init(output_printer_fp print, your_init_steps_fp more_steps) {

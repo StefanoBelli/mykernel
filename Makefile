@@ -4,21 +4,30 @@ OBJCOPY = objcopy
 DD = dd
 export CFLAGS = \
 	-O3 \
-	-fno-stack-protector \
 	-I.. \
-	-fno-asynchronous-unwind-tables \
-	-fno-inline \
+	-m32 \
 	-nostdinc \
 	-nostdlib \
-	-m32 \
+	-fno-stack-protector \
+	-fno-asynchronous-unwind-tables \
+	-fno-inline \
 	-fno-pic \
 	-fno-pie \
+	-fno-unroll-loops \
+	-fno-common \
 	-ffreestanding \
 	-std=c99 \
 	-pedantic \
 	-Wall \
 	-Wextra \
-	-W 
+	-Wshadow \
+	-W \
+	-Wundef \
+	-Wconversion \
+	-Wpadded \
+	-Werror \
+	-Wno-error=unused-parameter \
+	-Wno-error=unused-variable
 LDFLAGS = -m elf_i386 -T setup.ld
 OCFLAGS = -O binary
 RM = rm -f

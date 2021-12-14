@@ -1,11 +1,11 @@
 #include "kvga.h"
 #include <driver/vga.h>
 
-static mykt_uint_32 ix;
-static mykt_uint_32 jy;
+static mykt_uint_16 ix;
+static mykt_uint_16 jy;
 
 __mykapi void kvga_set_start_pos() {
-	mykt_pair_uint_32 start_pos = vga_cursor_get_pos();
+	mykt_pair_uint_16 start_pos = vga_cursor_get_pos();
 	ix = start_pos.x;
 	jy = start_pos.y;
 }
@@ -63,7 +63,7 @@ __mykapi void kvga_clear(mykt_int_8 bg, mykt_int_8 fg) {
 __mykapi void kvga_scroll(mykt_int_8 bg, mykt_int_8 fg) {
 	for(mykt_uint_32 k = 0; k < VGA_WIDTH; ++k) {
 		for(mykt_uint_32 t = 1; t < VGA_HEIGHT; ++t) {
-			mykt_int_8 ch = vga_text_getc(k, t) & 0xff;
+			mykt_int_8 ch = (mykt_int_8) (vga_text_getc(k, t) & 0xff);
 			vga_text_putc(ch, bg, fg, k, t - 1);
 		}
 	}
