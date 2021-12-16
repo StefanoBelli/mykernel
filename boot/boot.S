@@ -81,7 +81,6 @@ movw %ax, %gs
 movw %ax, %fs
 movw %ax, %ss
 movl $0x80000, %esp
-sti
 call kmain
 
 .code16
