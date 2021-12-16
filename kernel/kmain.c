@@ -19,11 +19,18 @@ __mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
 }
 
 void kmain() {
+	/*
 	x86_idt_install();
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	kprintf("kmain@%p: we're in protected mode!\n", kmain);
 	kprintf("kmain@%p: kernel entry point reached\n", kmain);
 	kprintf("kmain@%p: cpu halt\n", kmain);
+	*/
+
+	int j = 0;
+	for(int i = 0; i < 2560000; ++i) {
+		++j;
+	}
 
 	x86_cli();
 	x86_hlt();

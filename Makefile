@@ -3,13 +3,14 @@ LD = ld
 OBJCOPY = objcopy
 DD = dd
 export CFLAGS = \
-	-O3 \
+	-O0 \
 	-march=i386 \
 	-mtune=i386 \
 	-I.. \
 	-m32 \
 	-nostdinc \
 	-nostdlib \
+	-fomit-frame-pointer \
 	-fno-stack-protector \
 	-fno-asynchronous-unwind-tables \
 	-fno-inline \
