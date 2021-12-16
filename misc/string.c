@@ -114,3 +114,12 @@ __mykapi mykt_int_8* myk_str_tok(mykt_int_8* buf, mykt_int_8 tok) {
 
 	return (mykt_int_8*) 0;
 }
+
+__mykapi void* myk_memset(void* b, mykt_int_32 c, mykt_uint_32 n) {
+	mykt_uint_8* x = (mykt_uint_8*) b;
+	for(; n > 0; --n) {
+		*x++ = (mykt_uint_8) c;
+	}
+
+	return b;
+}
