@@ -7,7 +7,7 @@
 #define myk_memset(b, c, n) { \
 	mykt_uint_8* x = (mykt_uint_8*) b; \
 	for(mykt_uint_32 i = 0; i < n; ++i) { \
-		*x = (mykt_uint_8) c; \
+		*x++ = (mykt_uint_8) c; \
 	} \
 }
 

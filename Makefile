@@ -3,7 +3,7 @@ LD = ld
 OBJCOPY = objcopy
 DD = dd
 export CFLAGS = \
-	-O3 \
+	-O0 \
 	-I.. \
 	-m32 \
 	-nostdinc \
