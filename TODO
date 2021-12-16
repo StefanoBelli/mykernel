@@ -1,2 +1,0 @@
- - load kernel data from BIOS INTs / load kernel data from FDC DMA or PIO
- - FDC driver required
