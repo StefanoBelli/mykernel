@@ -3,7 +3,7 @@ LD = ld
 OBJCOPY = objcopy
 DD = dd
 export CFLAGS = \
-	-O0 \
+	-O3 \
 	-march=i386 \
 	-mtune=i386 \
 	-I.. \

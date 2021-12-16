@@ -80,8 +80,7 @@ movw %ax, %es
 movw %ax, %gs
 movw %ax, %fs
 movw %ax, %ss
-movl $0x400000, %ebp
-movl %ebp, %esp
+movl $0x80000, %esp
 sti
 call kmain
 
