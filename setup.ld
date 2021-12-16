@@ -12,6 +12,7 @@ SECTIONS {
 		kernel/kprintf.o (.text)
 		driver/vga.o (.text)
 		x86/x86.o (.text)
+		x86/idt.o (.text)
 		misc/itoa.o (.text)
 		misc/string.o (.text)
 	}

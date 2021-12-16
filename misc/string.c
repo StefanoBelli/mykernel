@@ -114,4 +114,3 @@ __mykapi mykt_int_8* myk_str_tok(mykt_int_8* buf, mykt_int_8 tok) {
 
 	return (mykt_int_8*) 0;
 }
-

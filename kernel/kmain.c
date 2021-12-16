@@ -1,4 +1,5 @@
 #include <x86/x86.h>
+#include <x86/idt.h>
 #include "kvga.h"
 #include "kprintf.h"
 
@@ -18,6 +19,7 @@ __mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
 }
 
 void kmain() {
+	x86_idt_install();
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	kprintf("kmain@%p: we're in protected mode!\n", kmain);
 	kprintf("kmain@%p: kernel entry point reached\n", kmain);
