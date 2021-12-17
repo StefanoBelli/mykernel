@@ -6,6 +6,7 @@ export CFLAGS = \
 	-O3 \
 	-march=i386 \
 	-mtune=i386 \
+	-mgeneral-regs-only \
 	-I.. \
 	-m32 \
 	-nostdinc \

@@ -10,9 +10,12 @@ SECTIONS {
 		kernel/kmain.o (.text)
 		kernel/kvga.o (.text)
 		kernel/kprintf.o (.text)
+		kernel/traps.o (.text)
+		kernel/irqs.o (.text)
 		driver/vga.o (.text)
 		x86/x86.o (.text)
 		x86/idt.o (.text)
+		x86/pic.o (.text)
 		misc/itoa.o (.text)
 		misc/string.o (.text)
 	}

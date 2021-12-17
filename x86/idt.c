@@ -2,7 +2,6 @@
 #include <misc/string.h>
 #include "x86.h"
 #include "idt.h"
-#include "types.h"
 
 typedef struct {
 	mykt_uint_16 offset_low;
@@ -27,3 +26,18 @@ void x86_idt_install() {
 
 	x86_lidt((mykt_uint_32) &idtd);
 }
+
+void x86_set_trap_gate(mykt_uint_8 i, int_gate_fp g) {
+	idt[i].offset_low = (mykt_uint_16) (((mykt_uint_32) g) & 0xffff);
+	idt[i].cs = 8;
+	idt[i].attrs = 0xaf;
+	idt[i].offset_high = (mykt_uint_16) (((mykt_uint_32) g) >> 16);
+}
+
+void x86_set_int_gate(mykt_uint_8 i, int_gate_fp g) {
+	idt[i].offset_low = (mykt_uint_16) (((mykt_uint_32) g) & 0xffff);
+	idt[i].cs = 8;
+	idt[i].attrs = 0xae;
+	idt[i].offset_high = (mykt_uint_16) (((mykt_uint_32) g) >> 16);
+}
+
