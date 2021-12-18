@@ -13,6 +13,8 @@ SECTIONS {
 		kernel/isr.o (.text)
 		kernel/isr_stub.o (.text)
 		kernel/misc.o (.text)
+		kernel/excps.o (.text)
+		kernel/irqs.o (.text)
 		driver/vga.o (.text)
 		x86/x86.o (.text)
 		x86/idt.o (.text)

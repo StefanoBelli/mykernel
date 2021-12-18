@@ -128,7 +128,8 @@ void dont_optimize omit_frame_pointer isr_handler(interrupt_frame frame) {
 }
 
 void isr_log_interrupt_frame(interrupt_frame f) {
-	kprintf("segment registers:\n"
+	kprintf(
+			"segment registers:\n"
 			"\tcs = %p, ss = %p, gs = %p, fs = %p, es = %p, ds = %p\n"
 			"general purpose registers:\n"
 			"\teax = %p, ebx = %p, ecx = %p, edx = %p\n"
@@ -146,5 +147,6 @@ void isr_log_interrupt_frame(interrupt_frame f) {
 			f.useresp,
 			f.eip,
 			f.efl,
-			f.intno, f.ec);
+			f.intno, f.ec
+		);
 }

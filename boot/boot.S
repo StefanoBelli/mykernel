@@ -3,6 +3,8 @@
 .text
 _start:
 .code16
+cli
+
 xorw %ax, %ax
 movw %ax, %ds
 movw %ax, %ss
@@ -18,8 +20,6 @@ movw $s_boot_start, %si
 call bios_printzln
 
 popw %dx
-
-cli
 
 call test_a20
 testb %al, %al
