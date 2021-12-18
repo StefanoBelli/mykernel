@@ -15,7 +15,7 @@ __mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
 	kvga_write(
 			buf, 
 			VGA_TEXT_COLOR_BLACK, 
-			VGA_TEXT_COLOR_WHITE, 
+			VGA_TEXT_COLOR_WHITE,
 			len, 
 			kvga_scroll
 			);
@@ -25,11 +25,11 @@ void kmain() {
 	x86_idt_install();
 	x86_pic_remap();
 	isr_set_int_gates();
-	isr_set_final_handlers();
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	x86_sti(); //end init phase
 	
 	kprintf("kernel basic initialization done\n");
 
+	__asm__ ("int $3;");
 	system_halt();
 }

@@ -23,13 +23,6 @@ SECTIONS {
 		misc/string.o (.text)
 	}
 
-	/*
-	kernel.data 0x10ffef : AT (0x100200) {
-		kernel/kmain.o (.data)
-		kernel/kmain.o (.bss)
-	}
-	*/
-
 	/DISCARD/ : {
 		*(.note.gnu.property) 
 	}

@@ -51,7 +51,7 @@ call bios_printzln
 jmp cpu_halt
 
 load_kernel:
-movw $0x20b, %ax
+movw $0x210, %ax
 movw $2, %cx
 xorb %dh, %dh
 movw $0xffff, %bx

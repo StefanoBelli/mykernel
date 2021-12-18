@@ -27,7 +27,6 @@ typedef struct {
 } interrupt_frame;
 
 __mykapi void isr_set_int_gates();
-__mykapi void isr_set_final_handlers();
 void isr_log_interrupt_frame(interrupt_frame);
 
 #endif

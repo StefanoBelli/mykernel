@@ -4,8 +4,11 @@
 #include "isr.h"
 #include "kprintf.h"
 #include "misc.h"
+#include "irqs.h"
+#include "excps.h"
 
 typedef void (*final_isr_handler_fp)(interrupt_frame);
+typedef void (*entry_isr_handler_fp)();
 
 extern void isr0();
 extern void isr1();
@@ -56,61 +59,44 @@ extern void isr45();
 extern void isr46();
 extern void isr47();
 
-static final_isr_handler_fp final_handlers[256]; // 47..256 reserved for future usages
+static const final_isr_handler_fp final_handlers[256] = {
+	[1] = excp_debug,
+	[3] = excp_breakpoint,
+	[32] = irq_timer,
+	[34] = irq_reserved_slavepic
+};
+
+static const entry_isr_handler_fp entry_handlers[47] = {
+	isr0, isr1, isr2, isr3, isr4, isr5, isr6, isr8, isr9, isr10,
+	isr11, isr12, isr13, isr14, isr15, isr16, isr17, isr18, isr19, isr20,
+	isr21, isr22, isr23, isr24, isr25, isr26, isr27, isr28, isr29, isr30,
+	isr31, isr32, isr33, isr34, isr35, isr36, isr37, isr38, isr39, isr40,
+	isr41, isr42, isr43, isr44, isr45, isr46, isr47
+};
+
+static const char* isr_name[47] = {
+	"divide by zero exception", "debug exception", "nmi exception",
+	"breakpoint exception", "overflow exception", "bound range exceeded exception",
+	"invalid opcode exception", "device not available exception", "double fault exception",
+	"coprocessor segment overrun exception", "invalid tss exception", "segment not present exception",
+	"stack-segment fault exception", "general protection fault exception", "page fault exception",
+	"reserved exception", "x87 floating point exception", "alignment check exception",
+	"machine check exception", "reserved exception", "reserved exception ", "reserved exception", 
+	"reserved exception", "reserved exception", "reserved exception", "reserved exception", 
+	"reserved exception", "timer irq", "keyboard irq", "slave pic reserved irq", "com2/com4 irq",
+	"com1/com3 irq", "parallel port irq", "floppy disk controller irq", "parallel port irq", "rtc irq",
+	"unassigned irq", "unassigned irq", "ps/2 mouse irq", "math coprocessor irq", "primary ide channel irq",
+	"secondary ide channel irq"
+};
 
 __mykapi void isr_set_int_gates() {
-	x86_set_int_gate(IDT_EXCP, 0, isr0);
-	x86_set_int_gate(IDT_EXCP, 1, isr1);
-	x86_set_int_gate(IDT_EXCP, 2, isr2);
-	x86_set_int_gate(IDT_EXCP, 3, isr3);
-	x86_set_int_gate(IDT_EXCP, 4, isr4);
-	x86_set_int_gate(IDT_EXCP, 5, isr5);
-	x86_set_int_gate(IDT_EXCP, 6, isr6);
-	x86_set_int_gate(IDT_EXCP, 7, isr7);
-	x86_set_int_gate(IDT_EXCP, 8, isr8);
-	x86_set_int_gate(IDT_EXCP, 9, isr9);
-	x86_set_int_gate(IDT_EXCP, 10, isr10);
-	x86_set_int_gate(IDT_EXCP, 11, isr11);
-	x86_set_int_gate(IDT_EXCP, 12, isr12);
-	x86_set_int_gate(IDT_EXCP, 13, isr13);
-	x86_set_int_gate(IDT_EXCP, 14, isr14);
-	x86_set_int_gate(IDT_EXCP, 15, isr15);
-	x86_set_int_gate(IDT_EXCP, 16, isr16);
-	x86_set_int_gate(IDT_EXCP, 17, isr17);
-	x86_set_int_gate(IDT_EXCP, 18, isr18);
-	x86_set_int_gate(IDT_EXCP, 19, isr19);
-	x86_set_int_gate(IDT_EXCP, 20, isr20);
-	x86_set_int_gate(IDT_EXCP, 21, isr21);
-	x86_set_int_gate(IDT_EXCP, 22, isr22);
-	x86_set_int_gate(IDT_EXCP, 23, isr23);
-	x86_set_int_gate(IDT_EXCP, 24, isr24);
-	x86_set_int_gate(IDT_EXCP, 25, isr25);
-	x86_set_int_gate(IDT_EXCP, 26, isr26);
-	x86_set_int_gate(IDT_EXCP, 27, isr27);
-	x86_set_int_gate(IDT_EXCP, 28, isr28);
-	x86_set_int_gate(IDT_EXCP, 29, isr29);
-	x86_set_int_gate(IDT_EXCP, 30, isr30);
-	x86_set_int_gate(IDT_EXCP, 31, isr31);
-	x86_set_int_gate(IDT_IRQ, 32, isr32);
-	x86_set_int_gate(IDT_IRQ, 33, isr33);
-	x86_set_int_gate(IDT_IRQ, 34, isr34);
-	x86_set_int_gate(IDT_IRQ, 35, isr35);
-	x86_set_int_gate(IDT_IRQ, 36, isr36);
-	x86_set_int_gate(IDT_IRQ, 37, isr37);
-	x86_set_int_gate(IDT_IRQ, 38, isr38);
-	x86_set_int_gate(IDT_IRQ, 39, isr39);
-	x86_set_int_gate(IDT_IRQ, 40, isr40);
-	x86_set_int_gate(IDT_IRQ, 41, isr41);
-	x86_set_int_gate(IDT_IRQ, 42, isr42);
-	x86_set_int_gate(IDT_IRQ, 43, isr43);
-	x86_set_int_gate(IDT_IRQ, 44, isr44);
-	x86_set_int_gate(IDT_IRQ, 45, isr45);
-	x86_set_int_gate(IDT_IRQ, 46, isr46);
-	x86_set_int_gate(IDT_IRQ, 47, isr47);
-}
-
-__mykapi void isr_set_final_handlers() {
-	myk_memset(final_handlers, 0, sizeof(final_handlers));
+	for(mykt_uint_8 i = 0; i < 32; ++i) {
+		x86_set_int_gate(IDT_EXCP, i, entry_handlers[i]);
+	}
+	
+	for(mykt_uint_8 i = 32; i < 47; ++i) {
+		x86_set_int_gate(IDT_IRQ, i, entry_handlers[i]);
+	}
 }
 
 void dont_optimize omit_frame_pointer isr_handler(interrupt_frame frame) {
@@ -139,7 +125,7 @@ void isr_log_interrupt_frame(interrupt_frame f) {
 			"\teip = %p\n"
 			"flags:\n"
 			"\tefl = %p\n"
-			"interrupt:\n"
+			"interrupt(%s):\n"
 			"\tno = %p, ec = %p\n",
 			f.cs, f.ss, f.gs, f.fs, f.es, f.ds,
 			f.eax, f.ebx, f.ecx, f.edx,
@@ -147,6 +133,6 @@ void isr_log_interrupt_frame(interrupt_frame f) {
 			f.useresp,
 			f.eip,
 			f.efl,
-			f.intno, f.ec
+			isr_name[f.intno], f.intno, f.ec
 		);
 }
