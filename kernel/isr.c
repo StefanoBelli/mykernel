@@ -7,6 +7,11 @@
 #include "irqs.h"
 #include "excps.h"
 
+#define ISR_START_EXCP 0
+#define ISR_START_IRQ 32
+#define N_ISR 48
+#define MAX_INTS 256
+
 typedef void (*final_isr_handler_fp)(interrupt_frame);
 typedef void (*entry_isr_handler_fp)();
 
@@ -59,14 +64,14 @@ extern void isr45();
 extern void isr46();
 extern void isr47();
 
-static const final_isr_handler_fp final_handlers[256] = {
+static const final_isr_handler_fp final_handlers[MAX_INTS] = {
 	[1] = excp_debug,
 	[3] = excp_breakpoint,
 	[32] = irq_timer,
 	[34] = irq_reserved_slavepic
 };
 
-static const entry_isr_handler_fp entry_handlers[48] = {
+static const entry_isr_handler_fp entry_handlers[N_ISR] = {
 	 isr0,  isr1,  isr2,  isr3,  isr4,  isr5,  isr6,  isr7,  isr8,  isr9, 
 	isr10, isr11, isr12, isr13, isr14, isr15, isr16, isr17, isr18, isr19, 
 	isr20, isr21, isr22, isr23, isr24, isr25, isr26, isr27, isr28, isr29, 
@@ -74,31 +79,31 @@ static const entry_isr_handler_fp entry_handlers[48] = {
 	isr40, isr41, isr42, isr43, isr44, isr45, isr46, isr47
 };
 
-static const char* isr_name[48] = {
-	"divide by zero exception",					"debug exception",						"nmi exception",
-	"breakpoint exception",						"overflow exception",					"bound range exceeded exception",
-	"invalid opcode exception",					"device not available exception",		"double fault exception",
-	"coprocessor segment overrun exception",	"invalid tss exception",				"segment not present exception",
-	"stack-segment fault exception",			"general protection fault exception",	"page fault exception",
-	"reserved exception",						"x87 floating point exception",			"alignment check exception",
-	"machine check exception",					"reserved exception",					"reserved exception", 
-	"reserved exception",						"reserved exception",					"reserved exception", 
-	"reserved exception",						"reserved exception",					"reserved exception", 
-	"reserved exception",						"reserved exception",					"reserved exception", 
-	"reserved exception",						"reserved exception",					"timer irq",						
-	"keyboard irq",								"slave pic reserved irq",				"com2/com4 irq",						
-	"com1/com3 irq",							"parallel port irq",					"floppy disk controller irq",
-	"parallel port irq",						"rtc irq",								"irq2 redirect irq",
-	"unassigned irq",							"unassigned irq",						"ps/2 mouse irq",
-	"math coprocessor irq",						"primary ide channel irq",				"secondary ide channel irq"
+static const char* isr_name[N_ISR] = {
+	"divide by zero exception","debug exception","nmi exception",
+	"breakpoint exception","overflow exception","bound range exceeded exception",
+	"invalid opcode exception","device not available exception","double fault exception",
+	"coprocessor segment overrun exception","invalid tss exception","segment not present exception",
+	"stack-segment fault exception","general protection fault exception","page fault exception",
+	"reserved exception","x87 floating point exception","alignment check exception",
+	"machine check exception","reserved exception","reserved exception", 
+	"reserved exception","reserved exception","reserved exception", 
+	"reserved exception","reserved exception","reserved exception", 
+	"reserved exception","reserved exception","reserved exception", 
+	"reserved exception","reserved exception","timer irq",						
+	"keyboard irq","slave pic reserved irq","com2/com4 irq",						
+	"com1/com3 irq","parallel port irq","floppy disk controller irq",
+	"parallel port irq","rtc irq","irq2 redirect irq",
+	"unassigned irq","unassigned irq","ps/2 mouse irq",
+	"math coprocessor irq","primary ide channel irq","secondary ide channel irq"
 };
 
 __mykapi void isr_set_int_gates() {
-	for(mykt_uint_8 i = 0; i < 32; ++i) {
+	for(mykt_uint_8 i = ISR_START_EXCP; i < ISR_START_IRQ; ++i) {
 		x86_set_int_gate(IDT_EXCP, i, entry_handlers[i]);
 	}
 	
-	for(mykt_uint_8 i = 32; i < 48; ++i) {
+	for(mykt_uint_8 i = ISR_START_IRQ; i < N_ISR; ++i) {
 		x86_set_int_gate(IDT_IRQ, i, entry_handlers[i]);
 	}
 }
@@ -112,7 +117,7 @@ void dont_optimize omit_frame_pointer isr_handler(interrupt_frame frame) {
 		system_halt();
 	}
 
-	if(frame.intno > 31 && frame.intno < 48) {
+	if(frame.intno >= ISR_START_IRQ && frame.intno < N_ISR) {
 		x86_pic_eoi((mykt_uint_8)frame.intno);
 	}
 }

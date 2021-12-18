@@ -30,6 +30,5 @@ void kmain() {
 	
 	kprintf("kernel basic initialization done\n");
 
-	__asm__ ("int $3;");
 	system_halt();
 }

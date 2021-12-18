@@ -8,5 +8,6 @@
 #define interrupt __attribute__((interrupt))
 #define dont_optimize __attribute__((optimize("O0")))
 #define omit_frame_pointer __attribute__((optimize("omit-frame-pointer")))
+#define unused __attribute__((unused))
 
 #endif
