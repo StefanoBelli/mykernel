@@ -3,8 +3,8 @@
 #include <x86/pic.h>
 #include "kvga.h"
 #include "kprintf.h"
-#include "traps.h"
-#include "irqs.h"
+#include "isr.h"
+#include "misc.h"
 
 __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();
@@ -24,16 +24,13 @@ __mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
 void kmain() {
 	x86_idt_install();
 	x86_pic_remap();
-	trap_gates_install();
-	irq_gates_install();
-	
+	isr_set_int_gates();
+	isr_set_final_handlers();
+
 	x86_sti();
 
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
-	kprintf("kmain@%p: we're in protected mode!\n", kmain);
-	kprintf("kmain@%p: kernel entry point reached\n", kmain);
-	kprintf("kmain@%p: cpu halt\n", kmain);
+	kprintf("kernel basic initialization done\n");
 
-	x86_cli();
-	x86_hlt();
+	system_halt();
 }

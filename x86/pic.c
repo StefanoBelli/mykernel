@@ -16,7 +16,7 @@
 
 #define EOI 0x20
 
-void x86_pic_remap() {
+__mykapi void x86_pic_remap() {
 	// Start PIC initialization sequence
 	x86_outb(PIC1_CTRL, ICW1);
 	x86_outb(PIC2_CTRL, ICW1);
@@ -38,8 +38,8 @@ void x86_pic_remap() {
 	x86_outb(PIC2_DATA, ZERO_DATA_REG);
 }
 
-void x86_pic_eoi(mykt_uint_8 irq) {
-	if(irq >= 8) {
+__mykapi void x86_pic_eoi(mykt_uint_8 irq) {
+	if(irq >= 40) {
 		x86_outb(PIC2_CTRL, EOI);
 	}
 

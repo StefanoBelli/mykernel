@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-void x86_pic_remap();
-void x86_pic_eoi(mykt_uint_8 irq);
+__mykapi void x86_pic_remap();
+__mykapi void x86_pic_eoi(mykt_uint_8 irq);
 
 #endif

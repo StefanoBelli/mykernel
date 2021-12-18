@@ -19,7 +19,7 @@ typedef struct {
 static idt_entry idt[256];
 static idt_desc idtd;
 
-void x86_idt_install() {
+__mykapi void x86_idt_install() {
 	idtd.limit = sizeof(idt) - 1;
 	idtd.base = (mykt_uint_32) &idt[0];
 	myk_memset(idt, 0, sizeof(idt));
@@ -27,17 +27,10 @@ void x86_idt_install() {
 	x86_lidt((mykt_uint_32) &idtd);
 }
 
-void x86_set_trap_gate(mykt_uint_8 i, int_gate_fp g) {
+__mykapi void x86_set_int_gate(mykt_uint_8 m, mykt_uint_8 i, int_gate_fp g) {
 	idt[i].offset_low = (mykt_uint_16) (((mykt_uint_32) g) & 0xffff);
 	idt[i].cs = 8;
-	idt[i].attrs = 0xaf;
-	idt[i].offset_high = (mykt_uint_16) (((mykt_uint_32) g) >> 16);
-}
-
-void x86_set_int_gate(mykt_uint_8 i, int_gate_fp g) {
-	idt[i].offset_low = (mykt_uint_16) (((mykt_uint_32) g) & 0xffff);
-	idt[i].cs = 8;
-	idt[i].attrs = 0xae;
+	idt[i].attrs = m;
 	idt[i].offset_high = (mykt_uint_16) (((mykt_uint_32) g) >> 16);
 }
 
