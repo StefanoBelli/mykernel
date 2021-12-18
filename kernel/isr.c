@@ -66,27 +66,31 @@ static const final_isr_handler_fp final_handlers[256] = {
 	[34] = irq_reserved_slavepic
 };
 
-static const entry_isr_handler_fp entry_handlers[47] = {
-	isr0, isr1, isr2, isr3, isr4, isr5, isr6, isr8, isr9, isr10,
-	isr11, isr12, isr13, isr14, isr15, isr16, isr17, isr18, isr19, isr20,
-	isr21, isr22, isr23, isr24, isr25, isr26, isr27, isr28, isr29, isr30,
-	isr31, isr32, isr33, isr34, isr35, isr36, isr37, isr38, isr39, isr40,
-	isr41, isr42, isr43, isr44, isr45, isr46, isr47
+static const entry_isr_handler_fp entry_handlers[48] = {
+	 isr0,  isr1,  isr2,  isr3,  isr4,  isr5,  isr6,  isr7,  isr8,  isr9, 
+	isr10, isr11, isr12, isr13, isr14, isr15, isr16, isr17, isr18, isr19, 
+	isr20, isr21, isr22, isr23, isr24, isr25, isr26, isr27, isr28, isr29, 
+	isr30, isr31, isr32, isr33, isr34, isr35, isr36, isr37, isr38, isr39, 
+	isr40, isr41, isr42, isr43, isr44, isr45, isr46, isr47
 };
 
-static const char* isr_name[47] = {
-	"divide by zero exception", "debug exception", "nmi exception",
-	"breakpoint exception", "overflow exception", "bound range exceeded exception",
-	"invalid opcode exception", "device not available exception", "double fault exception",
-	"coprocessor segment overrun exception", "invalid tss exception", "segment not present exception",
-	"stack-segment fault exception", "general protection fault exception", "page fault exception",
-	"reserved exception", "x87 floating point exception", "alignment check exception",
-	"machine check exception", "reserved exception", "reserved exception ", "reserved exception", 
-	"reserved exception", "reserved exception", "reserved exception", "reserved exception", 
-	"reserved exception", "timer irq", "keyboard irq", "slave pic reserved irq", "com2/com4 irq",
-	"com1/com3 irq", "parallel port irq", "floppy disk controller irq", "parallel port irq", "rtc irq",
-	"unassigned irq", "unassigned irq", "ps/2 mouse irq", "math coprocessor irq", "primary ide channel irq",
-	"secondary ide channel irq"
+static const char* isr_name[48] = {
+	"divide by zero exception",					"debug exception",						"nmi exception",
+	"breakpoint exception",						"overflow exception",					"bound range exceeded exception",
+	"invalid opcode exception",					"device not available exception",		"double fault exception",
+	"coprocessor segment overrun exception",	"invalid tss exception",				"segment not present exception",
+	"stack-segment fault exception",			"general protection fault exception",	"page fault exception",
+	"reserved exception",						"x87 floating point exception",			"alignment check exception",
+	"machine check exception",					"reserved exception",					"reserved exception", 
+	"reserved exception",						"reserved exception",					"reserved exception", 
+	"reserved exception",						"reserved exception",					"reserved exception", 
+	"reserved exception",						"reserved exception",					"reserved exception", 
+	"reserved exception",						"reserved exception",					"timer irq",						
+	"keyboard irq",								"slave pic reserved irq",				"com2/com4 irq",						
+	"com1/com3 irq",							"parallel port irq",					"floppy disk controller irq",
+	"parallel port irq",						"rtc irq",								"irq2 redirect irq",
+	"unassigned irq",							"unassigned irq",						"ps/2 mouse irq",
+	"math coprocessor irq",						"primary ide channel irq",				"secondary ide channel irq"
 };
 
 __mykapi void isr_set_int_gates() {
@@ -94,7 +98,7 @@ __mykapi void isr_set_int_gates() {
 		x86_set_int_gate(IDT_EXCP, i, entry_handlers[i]);
 	}
 	
-	for(mykt_uint_8 i = 32; i < 47; ++i) {
+	for(mykt_uint_8 i = 32; i < 48; ++i) {
 		x86_set_int_gate(IDT_IRQ, i, entry_handlers[i]);
 	}
 }
