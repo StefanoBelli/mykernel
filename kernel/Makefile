@@ -3,7 +3,8 @@ CC = gcc
 AS = as
 ASFLAGS = --32
 RM = rm -f
-OBJS = $(patsubst %.c, %.o, $(wildcard *.c)) isr_stub.o
+OBJS = $(patsubst %.S, %.o, $(wildcard *.S)) \
+	   $(patsubst %.c, %.o, $(wildcard *.c))
 
 all: $(OBJS)
 
@@ -11,6 +12,6 @@ all: $(OBJS)
 	$(AS) $(ASFLAGS) $< -o $@
 
 clean:
-	$(RM) $(OBJS) $(OBJAS)
+	$(RM) $(OBJS)
 
 .PHONY: all, clean
