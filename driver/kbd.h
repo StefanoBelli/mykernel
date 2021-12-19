@@ -33,7 +33,7 @@ typedef struct {
 		enum {
 			LOCK_SCROLL,
 			LOCK_NUM,
-			LOCK_RIGHT
+			LOCK_CAPS
 		} lock;
 		
 		enum {
@@ -68,7 +68,7 @@ typedef struct {
 	} key_press;
 } aligned(12) kbd_key;
 
-typedef void (*kbd_evt_fp)(kbd_key);
-void kbd_init();
+typedef void (*__mykapi kbd_evt_fp)(kbd_key);
+__mykapi void kbd_init();
 
 #endif
