@@ -9,5 +9,6 @@
 #define dont_optimize __attribute__((optimize("O0")))
 #define omit_frame_pointer __attribute__((optimize("omit-frame-pointer")))
 #define unused __attribute__((unused))
+#define aligned(n) __attribute__((aligned(n)))
 
 #endif
