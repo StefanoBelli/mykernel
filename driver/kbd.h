@@ -1,5 +1,5 @@
-#ifndef MYKERNEL_KEYBOARD_DRIVER_H
-#define MYKERNEL_KEYBOARD_DRIVER_H
+#ifndef MYKERNEL_KBD_DRIVER_H
+#define MYKERNEL_KBD_DRIVER_H
 
 #include <misc/gcc.h>
 
