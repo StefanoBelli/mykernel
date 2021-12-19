@@ -2,6 +2,7 @@
 #define MYKERNEL_KBD_DRIVER_H
 
 #include <misc/gcc.h>
+#include "types.h"
 
 typedef struct {
 	union {
