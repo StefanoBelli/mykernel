@@ -26,8 +26,9 @@ void kmain() {
 	x86_pic_remap();
 	isr_set_int_gates();
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
+	x86_pic_set_mask(0);
 	x86_sti(); //end init phase
-	
+
 	kprintf("kernel basic initialization done\n");
 
 	system_halt();

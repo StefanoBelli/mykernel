@@ -6,7 +6,7 @@
 // IRQs with numbering are placeholders without implementation
 
 void irq_timer(interrupt_frame);
-void irq_1(interrupt_frame);
+void irq_keyboard(interrupt_frame);
 void irq_reserved_slavepic(interrupt_frame);
 void irq_3(interrupt_frame);
 void irq_4(interrupt_frame);
