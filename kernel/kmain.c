@@ -30,32 +30,19 @@ void kmain() {
 	x86_pic_set_mask(1);
 	x86_pit_set_freq(1000);
 	isr_set_int_gates();
-	mykt_int_32 k = kbd_init();
+	mykt_int_32 kbd_init_fail = kbd_init();
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	x86_sti(); //end init phase
 
-	kprintf("kernel basic initialization done %x\n", x86_inb(0x60));
+	kprintf("kernel basic initialization done\n");
 
-	if(k != 0) {
-		kprintf("kbd init failed (%d)\n", k);
+	if(kbd_init_fail != 0) {
+		kprintf("kbd init failed (%d)\n", kbd_init_fail);
 		goto fail_halt;
 	}
-
-	/*
-	x86_outb(0x60, (mykt_int_8) 0xf0);
-	kprintf("%x\n", x86_inb(0x60));
-	x86_outb(0x60, 1);
-	kprintf("%x\n", x86_inb(0x60));
-
-	kprintf("%x\n", x86_inb(0x60));
 	
-	x86_outb(0x60, (mykt_int_8) 0xf0);
-	kprintf("%x\n", x86_inb(0x60));
-	x86_outb(0x60, 0);
-	kprintf("%x\n", x86_inb(0x60));
+	x86_pic_clear_mask(1);
 
-	kprintf("%x\n", x86_inb(0x60));
-	*/
 fail_halt:
 	system_halt();
 }
