@@ -1,6 +1,7 @@
 #include <x86/x86.h>
 #include <x86/idt.h>
 #include <x86/pic.h>
+#include <x86/pit.h>
 #include "kvga.h"
 #include "kprintf.h"
 #include "isr.h"
@@ -24,9 +25,11 @@ __mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
 void kmain() {
 	x86_idt_install();
 	x86_pic_remap();
+	x86_pic_set_mask(0);
+	x86_pic_set_mask(1);
+	x86_pit_set_freq(1000);
 	isr_set_int_gates();
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
-	x86_pic_set_mask(0);
 	x86_sti(); //end init phase
 
 	kprintf("kernel basic initialization done\n");

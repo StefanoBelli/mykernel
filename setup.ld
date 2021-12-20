@@ -15,10 +15,12 @@ SECTIONS {
 		kernel/misc.o (.text)
 		kernel/excps.o (.text)
 		kernel/irqs.o (.text)
+		kernel/ksleep.o (.text)
 		driver/vga.o (.text)
 		x86/x86.o (.text)
 		x86/idt.o (.text)
 		x86/pic.o (.text)
+		x86/pit.o (.text)
 		misc/itoa.o (.text)
 		misc/string.o (.text)
 	}
