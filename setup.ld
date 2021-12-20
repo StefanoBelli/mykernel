@@ -17,6 +17,7 @@ SECTIONS {
 		kernel/irqs.o (.text)
 		kernel/ksleep.o (.text)
 		driver/vga.o (.text)
+		driver/kbd.o (.text)
 		x86/x86.o (.text)
 		x86/idt.o (.text)
 		x86/pic.o (.text)

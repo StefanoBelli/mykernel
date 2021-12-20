@@ -2,7 +2,7 @@
 #define MYKERNEL_KBD_DRIVER_H
 
 #include <misc/gcc.h>
-#include "types.h"
+#include <misc/types.h>
 
 typedef struct {
 	union {
@@ -66,9 +66,9 @@ typedef struct {
 		KEY_PRESS_PRESSED,
 		KEY_PRESS_RELEASED
 	} key_press;
-} aligned(12) kbd_key;
+} kbd_key;
 
 typedef void (*__mykapi kbd_evt_fp)(kbd_key);
-__mykapi void kbd_init();
+__mykapi mykt_int_32 kbd_init();
 
 #endif
