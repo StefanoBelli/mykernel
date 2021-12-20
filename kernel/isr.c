@@ -112,7 +112,7 @@ void dont_optimize omit_frame_pointer isr_handler(interrupt_frame frame) {
 	if(final_handlers[frame.intno]) {
 		final_handlers[frame.intno](frame);
 	} else {
-		kprintf("unhandled isr, register status follows:\n");
+		kprintf("unhandled int, register status follows:\n");
 		isr_log_interrupt_frame(frame);
 		system_halt();
 	}
