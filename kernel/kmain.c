@@ -2,11 +2,11 @@
 #include <x86/idt.h>
 #include <x86/pic.h>
 #include <x86/pit.h>
+#include <driver/kbd.h>
 #include "kvga.h"
 #include "kprintf.h"
 #include "isr.h"
 #include "misc.h"
-#include <driver/kbd.h>
 
 __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();

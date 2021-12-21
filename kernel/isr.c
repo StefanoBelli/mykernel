@@ -68,6 +68,7 @@ static const final_isr_handler_fp final_handlers[MAX_INTS] = {
 	[1] = excp_debug,
 	[3] = excp_breakpoint,
 	[32] = irq_timer,
+	[33] = irq_keyboard,
 	[34] = irq_reserved_slavepic
 };
 
@@ -79,7 +80,7 @@ static const entry_isr_handler_fp entry_handlers[N_ISR] = {
 	isr40, isr41, isr42, isr43, isr44, isr45, isr46, isr47
 };
 
-static const char* isr_name[N_ISR] = {
+static const mykt_int_8* isr_name[N_ISR] = {
 	"divide by zero exception","debug exception","nmi exception",
 	"breakpoint exception","overflow exception","bound range exceeded exception",
 	"invalid opcode exception","device not available exception","double fault exception",

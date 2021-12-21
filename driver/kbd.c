@@ -1,6 +1,18 @@
 #include <x86/x86.h>
 #include "kbd.h"
 
+static mykt_int_8 ss1[89] = {
+	0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+	'-', '=', '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u',
+	'i', 'o', 'p', '[', ']', '\n', 0, 'a', 's', 'd', 'f', 'g', 
+	'h', 'j', 'k', 'l', ';', '\'', 0, 0, '\\', 'z', 'x', 'c', 
+	'v', 'b', 'n', 'm', ',', '.', '/', 0, '*', 0, ' ', 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '7', '8', '9', '-', '4', 
+	'5', '6', '+', '1', '2', '3', '0', '.', 0, 0, 0, 0, 0 
+};
+
+static kbd_evt_fp handler;
+
 __mykapi mykt_int_32 kbd_init() {
 	// disable devices
 	x86_outb(0x64, (mykt_int_8) 0xad);
@@ -43,4 +55,15 @@ __mykapi mykt_int_32 kbd_init() {
 	x86_outb(0x64, (mykt_int_8) 0xae);
 
 	return 0;
+}
+
+__mykapi void kbd_set_handler(kbd_evt_fp h) {
+	handler = h;
+}
+
+__mykapi void __kbd_evt() {
+	mykt_int_8 ss = x86_inb(0x60);
+	if(handler == 0) {
+		return;
+	}
 }

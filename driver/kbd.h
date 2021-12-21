@@ -69,6 +69,9 @@ typedef struct {
 } kbd_key;
 
 typedef void (*__mykapi kbd_evt_fp)(kbd_key);
+
 __mykapi mykt_int_32 kbd_init();
+__mykapi void kbd_set_handler(kbd_evt_fp);
+__mykapi void __kbd_evt();
 
 #endif
