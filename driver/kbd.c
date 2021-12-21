@@ -1,14 +1,35 @@
 #include <x86/x86.h>
 #include "kbd.h"
 
+#define LS -19 //left shift
+#define LC -18 //left ctrl
+#define LA -17 //left alt
+#define RS -16 //right shift
+#define CL -15 //capslock
+#define NL -14 //numlock
+#define SL -13 //scrollock
+#define FC -12 //f12
+#define FB -11 //f11
+#define FA -10 //f10
+#define F9 -9
+#define F8 -8
+#define F7 -7
+#define F6 -6
+#define F5 -5
+#define F4 -4
+#define F3 -3
+#define F2 -2
+#define F1 -1
+
 static mykt_int_8 ss1[89] = {
 	0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
 	'-', '=', '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u',
-	'i', 'o', 'p', '[', ']', '\n', 0, 'a', 's', 'd', 'f', 'g', 
-	'h', 'j', 'k', 'l', ';', '\'', 0, 0, '\\', 'z', 'x', 'c', 
-	'v', 'b', 'n', 'm', ',', '.', '/', 0, '*', 0, ' ', 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '7', '8', '9', '-', '4', 
-	'5', '6', '+', '1', '2', '3', '0', '.', 0, 0, 0, 0, 0 
+	'i', 'o', 'p', '[', ']', '\n', LC, 'a', 's', 'd', 'f', 'g', 
+	'h', 'j', 'k', 'l', ';', '\'', '`', LS, '\\', 'z', 'x', 'c', 
+	'v', 'b', 'n', 'm', ',', '.', '/', RS, '*', LA, ' ', CL, F1, 
+	F2, F3, F4, F5, F6, F7, F8, F9, FA, NL, SL, '7', '8', '9', 
+	'-', '4', '5', '6', '+', '1', '2', '3', '0', '.', 0, 0, 0, 
+	FB, FC
 };
 
 static kbd_evt_fp handler;
@@ -66,4 +87,6 @@ __mykapi void __kbd_evt() {
 	if(handler == 0) {
 		return;
 	}
+	
+
 }
