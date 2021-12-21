@@ -1,31 +1,31 @@
 #include <x86/x86.h>
 #include "kbd.h"
 
-#define AD 25 //arrow down
-#define AR 24 //arrow right
-#define AL 23 //arrow left
-#define AU 22 //arrow up
-#define RS 21 //right shift
-#define LS 20 //left shift
-#define RC 19 //right ctrl
-#define LC 18 //left ctrl
-#define RA 17 //right alt
-#define LA 16 //left alt
-#define CL 15 //capslock
-#define NL 14 //numlock
-#define SL 13 //scrollock
-#define FC 12 //f12
-#define FB 11 //f11
-#define FA 10 //f10
-#define F9 9
-#define F8 8
-#define F7 7
-#define F6 6
-#define F5 5
-#define F4 4
-#define F3 3
-#define F2 2
-#define F1 1
+#define AD KBD_KEY_PAYLD_ARROW_DOWN //arrow down
+#define AR KBD_KEY_PAYLD_ARROW_RIGHT //arrow right
+#define AL KBD_KEY_PAYLD_ARROW_LEFT //arrow left
+#define AU KBD_KEY_PAYLD_ARROW_UP //arrow up
+#define RS KBD_KEY_PAYLD_RIGHT_SHIFT //right shift
+#define LS KBD_KEY_PAYLD_LEFT_SHIFT //left shift
+#define RC KBD_KEY_PAYLD_RIGHT_CTRL //right ctrl
+#define LC KBD_KEY_PAYLD_LEFT_CTRL //left ctrl
+#define RA KBD_KEY_PAYLD_RIGHT_ALT //right alt
+#define LA KBD_KEY_PAYLD_LEFT_ALT //left alt
+#define CL KBD_KEY_PAYLD_CAPS_LOCK //capslock
+#define NL KBD_KEY_PAYLD_NUM_LOCK //numlock
+#define SL KBD_KEY_PAYLD_SCROLL_LOCK //scrollock
+#define FC KBD_KEY_PAYLD_F12 //f12
+#define FB KBD_KEY_PAYLD_F11 //f11
+#define FA KBD_KEY_PAYLD_F10 //f10
+#define F9 KBD_KEY_PAYLD_F9
+#define F8 KBD_KEY_PAYLD_F8
+#define F7 KBD_KEY_PAYLD_F7
+#define F6 KBD_KEY_PAYLD_F6
+#define F5 KBD_KEY_PAYLD_F5
+#define F4 KBD_KEY_PAYLD_F4
+#define F3 KBD_KEY_PAYLD_F3
+#define F2 KBD_KEY_PAYLD_F2
+#define F1 KBD_KEY_PAYLD_F1
 
 static const mykt_int_8 ss1[89] = {
 	0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
