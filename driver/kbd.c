@@ -1,8 +1,8 @@
 #include <x86/x86.h>
 #include "kbd.h"
 
-#define LS -19 //left shift
-#define RS -18 //right shift
+#define RS -19 //right shift
+#define LS -18 //left shift
 #define LC -17 //left ctrl
 #define LA -16 //left alt
 #define CL -15 //capslock
