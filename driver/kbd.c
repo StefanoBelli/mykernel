@@ -2,9 +2,9 @@
 #include "kbd.h"
 
 #define LS -19 //left shift
-#define LC -18 //left ctrl
-#define LA -17 //left alt
-#define RS -16 //right shift
+#define RS -18 //right shift
+#define LC -17 //left ctrl
+#define LA -16 //left alt
 #define CL -15 //capslock
 #define NL -14 //numlock
 #define SL -13 //scrollock
