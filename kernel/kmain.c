@@ -30,12 +30,12 @@ void kmain() {
 	x86_pic_set_mask(1);
 	x86_pit_set_freq(1000);
 	isr_set_int_gates();
-	mykt_int_32 kbd_init_fail = kbd_init();
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	x86_sti(); //end init phase
 
 	kprintf("kernel basic initialization done\n");
 
+	mykt_int_32 kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
 		kprintf("kbd init failed (%d)\n", kbd_init_fail);
 		goto fail_halt;
