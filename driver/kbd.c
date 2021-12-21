@@ -1,31 +1,31 @@
 #include <x86/x86.h>
 #include "kbd.h"
 
-#define AD -25 //arrow down
-#define AR -24 //arrow right
-#define AL -23 //arrow left
-#define AU -22 //arrow up
-#define RS -21 //right shift
-#define LS -20 //left shift
-#define RC -19 //right ctrl
-#define LC -18 //left ctrl
-#define RA -17 //right alt
-#define LA -16 //left alt
-#define CL -15 //capslock
-#define NL -14 //numlock
-#define SL -13 //scrollock
-#define FC -12 //f12
-#define FB -11 //f11
-#define FA -10 //f10
-#define F9 -9
-#define F8 -8
-#define F7 -7
-#define F6 -6
-#define F5 -5
-#define F4 -4
-#define F3 -3
-#define F2 -2
-#define F1 -1
+#define AD 25 //arrow down
+#define AR 24 //arrow right
+#define AL 23 //arrow left
+#define AU 22 //arrow up
+#define RS 21 //right shift
+#define LS 20 //left shift
+#define RC 19 //right ctrl
+#define LC 18 //left ctrl
+#define RA 17 //right alt
+#define LA 16 //left alt
+#define CL 15 //capslock
+#define NL 14 //numlock
+#define SL 13 //scrollock
+#define FC 12 //f12
+#define FB 11 //f11
+#define FA 10 //f10
+#define F9 9
+#define F8 8
+#define F7 7
+#define F6 6
+#define F5 5
+#define F4 4
+#define F3 3
+#define F2 2
+#define F1 1
 
 static const mykt_int_8 ss1[89] = {
 	0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
@@ -104,6 +104,14 @@ __mykapi void __kbd_evt() {
 	if(handler == 0) {
 		return;
 	}
-	
-
+	/*
+	mykt_int_8 ch = 0;
+	if(ss == (mykt_uint_8) 0xe0) {
+		mykt_int_8 m = x86_inb(0x60);
+		if(m >= (mykt_uint_8) 0x1c && m <= (mykt_uint_8) 0xd0) {
+			//ch = e0_ss1[m > 0x50 ? m - 128 : m];
+		}
+	} else if(ss >= (mykt_uint_8) 1 && ss <= (mykt_uint_8) 0xd8) {
+		//ch = ss1[ss > 0x58 ? ss - 128 : ss];
+	}*/
 }
