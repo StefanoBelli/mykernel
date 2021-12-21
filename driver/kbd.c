@@ -1,9 +1,15 @@
 #include <x86/x86.h>
 #include "kbd.h"
 
-#define RS -19 //right shift
-#define LS -18 //left shift
-#define LC -17 //left ctrl
+#define AD -25 //arrow down
+#define AR -24 //arrow right
+#define AL -23 //arrow left
+#define AU -22 //arrow up
+#define RS -21 //right shift
+#define LS -20 //left shift
+#define RC -19 //right ctrl
+#define LC -18 //left ctrl
+#define RA -17 //right alt
 #define LA -16 //left alt
 #define CL -15 //capslock
 #define NL -14 //numlock
@@ -21,7 +27,7 @@
 #define F2 -2
 #define F1 -1
 
-static mykt_int_8 ss1[89] = {
+static const mykt_int_8 ss1[89] = {
 	0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
 	'-', '=', '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u',
 	'i', 'o', 'p', '[', ']', '\n', LC, 'a', 's', 'd', 'f', 'g', 
@@ -30,6 +36,17 @@ static mykt_int_8 ss1[89] = {
 	F2, F3, F4, F5, F6, F7, F8, F9, FA, NL, SL, '7', '8', '9', 
 	'-', '4', '5', '6', '+', '1', '2', '3', '0', '.', 0, 0, 0, 
 	FB, FC
+};
+
+static const mykt_int_8 e0_ss1[81] = {
+	[0x1c] = '\n',
+	[0x1d] = RC,
+	[0x35] = '/',
+	[0x38] = RA,
+	[0x48] = AU,
+	[0x4b] = AL,
+	[0x4d] = AR,
+	[0x50] = AD,
 };
 
 static kbd_evt_fp handler;

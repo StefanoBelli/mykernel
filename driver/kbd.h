@@ -22,7 +22,14 @@ typedef struct {
 			FN_11,
 			FN_12
 		} fn;
-		
+
+		enum {
+			ARROW_UP,
+			ARROW_LEFT,
+			ARROW_RIGHT,
+			ARROW_DOWN
+		} arrow;
+
 		enum {
 			LOCK_SCROLL,
 			LOCK_NUM,
@@ -35,16 +42,19 @@ typedef struct {
 		} shift;
 		
 		enum {
-			CTRL_LEFT
+			CTRL_LEFT,
+			CTRL_RIGHT
 		} ctrl;
 		
 		enum {
-			ALT_LEFT
+			ALT_LEFT,
+			ALT_RIGHT
 		} alt;
 	} key;
 
 	enum {
 		KEY_TYPE_CHAR,
+		KEY_TYPE_ARROW,
 		KEY_TYPE_FN,
 		KEY_TYPE_LOCK,
 		KEY_TYPE_SHIFT,
