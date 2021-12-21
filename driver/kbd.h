@@ -4,7 +4,7 @@
 #include <misc/gcc.h>
 #include <misc/types.h>
 
-typedef mykt_uint_16 kbd_key;
+typedef mykt_int_16 kbd_key;
 typedef mykt_uint_8 kbd_key_payld_ch;
 
 typedef enum {
@@ -65,8 +65,8 @@ typedef enum {
 	KEY_PRESS_RELEASED
 } kbd_key_press;
 
-#define kbd_key_get_keypress(k) (k & 0x1800) >> 11
-#define kbd_key_get_type(k) (k & 0x700) >> 8
+#define kbd_key_get_keypress(k) ((k & 0x800) >> 11)
+#define kbd_key_get_type(k) ((k & 0x700) >> 8)
 #define kbd_key_get_payld(k) (k & 0xff)
 
 typedef void (*__mykapi kbd_evt_fp)(kbd_key);

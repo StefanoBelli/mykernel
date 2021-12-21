@@ -104,14 +104,49 @@ __mykapi void __kbd_evt() {
 	if(handler == 0) {
 		return;
 	}
-	/*
+
 	mykt_int_8 ch = 0;
-	if(ss == (mykt_uint_8) 0xe0) {
+	kbd_key k = 0;
+	
+	if(ss == (mykt_int_8) 0xe0) {
 		mykt_int_8 m = x86_inb(0x60);
-		if(m >= (mykt_uint_8) 0x1c && m <= (mykt_uint_8) 0xd0) {
-			//ch = e0_ss1[m > 0x50 ? m - 128 : m];
+		if(m >= (mykt_int_8) 0x1c && m <= (mykt_int_8) 0xd0) {
+			mykt_int_8 idx = m;
+			if(m > 0x50) {
+				k = 0x800;
+				idx -= 128;
+			}
+
+			ch = e0_ss1[(mykt_uint_8) idx];
 		}
-	} else if(ss >= (mykt_uint_8) 1 && ss <= (mykt_uint_8) 0xd8) {
-		//ch = ss1[ss > 0x58 ? ss - 128 : ss];
-	}*/
+	} else if(ss >= (mykt_int_8) 1 && ss <= (mykt_int_8) 0xd8) {
+		mykt_int_8 idx = ss;
+		if(ss > 0x58) {
+			k = 0x800;
+			idx -= 128;
+		}
+
+		ch = ss1[(mykt_uint_8) idx];
+	}
+	
+	k = (kbd_key) (k | ch);
+
+	if(ch >= F1 && ch <= FC) {
+		k = (kbd_key) (k | (KEY_TYPE_FN << 8));
+	} else if(ch >= SL && ch <= CL) {
+		k = (kbd_key) (k | (KEY_TYPE_LOCK << 8));
+	} else if(ch >= LA && ch <= RA) {
+		k = (kbd_key) (k | (KEY_TYPE_ALT << 8));
+	} else if(ch >= LC && ch <= RC) {
+		k = (kbd_key) (k | (KEY_TYPE_CTRL << 8));
+	} else if(ch >= LS && ch <= RS) {
+		k = (kbd_key) (k | (KEY_TYPE_SHIFT << 8));
+	} else if(ch >= AU && ch <= AD) {
+		k = (kbd_key) (k | (KEY_TYPE_ARROW << 8));
+	} else {
+		k = (kbd_key) (k | (KEY_TYPE_CHAR << 8));
+	}
+	
+	handler(k);
 }
+
