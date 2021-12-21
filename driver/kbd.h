@@ -45,7 +45,6 @@ typedef struct {
 
 	enum {
 		KEY_TYPE_CHAR,
-		KEY_TYPE_ARROW,
 		KEY_TYPE_FN,
 		KEY_TYPE_LOCK,
 		KEY_TYPE_SHIFT,
