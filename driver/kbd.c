@@ -85,7 +85,8 @@ __mykapi mykt_int_32 kbd_init() {
 		return -1;
 	}
 	
-	// enable interrupts
+	// enable interrupt 0
+	// keep interrupt 1 and translation disabled
 	x86_outb(0x64, (mykt_int_8) 0x60);
 	x86_outb(0x60, (mykt_int_8) (ccb | 1));
 
