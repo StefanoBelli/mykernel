@@ -41,6 +41,8 @@ void kmain() {
 		goto fail_halt;
 	}
 
+	x86_pic_clear_mask(1);
+
 fail_halt:
 	system_halt();
 }

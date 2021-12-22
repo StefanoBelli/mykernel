@@ -99,36 +99,50 @@ __mykapi void kbd_set_handler(kbd_evt_fp h) {
 	handler = h;
 }
 
-__mykapi void __kbd_evt() {
-	mykt_int_8 ss = x86_inb(0x60);
+__mykapi void dont_optimize omit_frame_pointer __kbd_evt() {
+	static mykt_uint_8 expects_sb = 0;
+	mykt_uint_8 fb = (mykt_uint_8) x86_inb(0x60);
+	mykt_uint_8 sb;
+
+	if(!expects_sb && fb == 0xe0) {
+		expects_sb = 1;
+		return;
+	} else if(expects_sb) {
+		sb = (mykt_uint_8) x86_inb(0x60);
+	}
+
 	if(handler == 0) {
 		return;
 	}
 
-	mykt_int_8 ch = 0;
+	const mykt_int_8* ssp = 0;
+	mykt_uint_8 rel = 0;
+	mykt_uint_8 idx = 0;
 	kbd_key k = 0;
-	
-	if(ss == (mykt_int_8) 0xe0) {
-		mykt_int_8 m = x86_inb(0x60);
-		if(m >= (mykt_int_8) 0x1c && m <= (mykt_int_8) 0xd0) {
-			mykt_int_8 idx = m;
-			if(m > 0x50) {
-				k = 0x800;
-				idx -= 128;
-			}
 
-			ch = e0_ss1[(mykt_uint_8) idx];
+	if(expects_sb) {
+		expects_sb = 0;
+		if(sb >= 0x1c && sb <= 0xd0) {
+			idx = sb;
+			ssp = e0_ss1;
+			rel = sb > 0x50;
+		} else {
+			return;
 		}
-	} else if(ss >= (mykt_int_8) 1 && ss <= (mykt_int_8) 0xd8) {
-		mykt_int_8 idx = ss;
-		if(ss > 0x58) {
-			k = 0x800;
-			idx -= 128;
-		}
-
-		ch = ss1[(mykt_uint_8) idx];
+	} else if(fb >= 1 && fb <= 0xd8) {
+		idx = fb;
+		ssp = ss1;
+		rel = fb > 0x58;
+	} else {
+		return;
 	}
-	
+
+	if(rel) {
+		k = 0x800;
+		idx -= 128;
+	}
+
+	mykt_int_8 ch = ssp[idx];
 	k = (kbd_key) (k | ch);
 
 	if(ch >= F1 && ch <= FC) {
