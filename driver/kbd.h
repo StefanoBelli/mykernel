@@ -33,6 +33,7 @@
 typedef mykt_int_16 kbd_key;
 typedef mykt_uint_8 kbd_key_payld_ch;
 
+/*
 typedef enum {
 	FN_1,
 	FN_2,
@@ -75,6 +76,7 @@ typedef enum {
 	ALT_LEFT,
 	ALT_RIGHT
 } kbd_key_payld_alt;
+*/
 
 typedef enum {
 	KEY_TYPE_CHAR,
