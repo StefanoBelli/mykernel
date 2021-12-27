@@ -4,7 +4,6 @@
 #include "isr.h"
 #include "kprintf.h"
 #include "misc.h"
-#include "irqs.h"
 #include "excps.h"
 
 #define ISR_START_EXCP 0
@@ -12,7 +11,6 @@
 #define N_ISR 48
 #define MAX_INTS 256
 
-typedef void (*final_isr_handler_fp)(interrupt_frame);
 typedef void (*entry_isr_handler_fp)();
 
 extern void isr0();
@@ -64,12 +62,9 @@ extern void isr45();
 extern void isr46();
 extern void isr47();
 
-static const final_isr_handler_fp final_handlers[MAX_INTS] = {
+static isrh_fp final_handlers[MAX_INTS] = {
 	[1] = excp_debug,
 	[3] = excp_breakpoint,
-	[32] = irq_timer,
-	[33] = irq_keyboard,
-	[34] = irq_reserved_slavepic
 };
 
 static const entry_isr_handler_fp entry_handlers[N_ISR] = {
@@ -145,4 +140,8 @@ void isr_log_interrupt_frame(interrupt_frame f) {
 			f.efl,
 			isr_name[f.intno], f.intno, f.ec
 		);
+}
+
+__mykapi void isr_register_irq_handler(irqn i, isrh_fp h) {
+	final_handlers[i + 32] = h;
 }

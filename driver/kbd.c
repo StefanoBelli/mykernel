@@ -1,3 +1,4 @@
+#include <kernel/isr.h>
 #include <x86/x86.h>
 #include "kbd.h"
 
@@ -51,56 +52,7 @@ static const mykt_int_8 e0_ss1[81] = {
 
 static kbd_evt_fp handler;
 
-__mykapi mykt_int_32 kbd_init() {
-	// disable devices
-	x86_outb(0x64, (mykt_int_8) 0xad);
-	
-	// flush output buffers
-	x86_inb(0x60);
-
-	// disable interrupt 0 and 1
-	// and translation
-	x86_outb(0x64, (mykt_int_8) 0x20);
-	mykt_int_8 ccb = (mykt_int_8) (x86_inb(0x60) & 0xbc);
-	x86_outb(0x64, 0x60);
-	x86_outb(0x60, ccb);
-
-	// reset device and check for kbd ACK
-	x86_outb(0x60, (mykt_int_8) 0xff);
-	mykt_int_8 reset_ack = x86_inb(0x60);
-	mykt_int_8 self_test_pass = x86_inb(0x60);
-	if(reset_ack != (mykt_int_8) 0xfa || 
-		self_test_pass != (mykt_int_8) 0xaa) {
-		return -3;
-	}
-
-	// set scan code set 1
-	x86_outb(0x60, (mykt_int_8) 0xf0);
-	if(x86_inb(0x60) != (mykt_int_8) 0xfa) {
-		return -2;
-	}
-
-	x86_outb(0x60, (mykt_int_8) 1);
-	if(x86_inb(0x60) != (mykt_int_8) 0xfa) {
-		return -1;
-	}
-	
-	// enable interrupt 0
-	// keep interrupt 1 and translation disabled
-	x86_outb(0x64, (mykt_int_8) 0x60);
-	x86_outb(0x60, (mykt_int_8) (ccb | 1));
-
-	// enable device
-	x86_outb(0x64, (mykt_int_8) 0xae);
-
-	return 0;
-}
-
-__mykapi void kbd_set_handler(kbd_evt_fp h) {
-	handler = h;
-}
-
-__mykapi void dont_optimize omit_frame_pointer __kbd_evt() {
+static void dont_optimize omit_frame_pointer __kbd_evt(unused interrupt_frame f) {
 	static mykt_uint_8 expects_sb = 0;
 	mykt_uint_8 fb = (mykt_uint_8) x86_inb(0x60);
 	mykt_uint_8 sb;
@@ -113,6 +65,7 @@ __mykapi void dont_optimize omit_frame_pointer __kbd_evt() {
 	}
 
 	if(handler == 0) {
+		expects_sb = 0;
 		return;
 	}
 
@@ -165,3 +118,53 @@ __mykapi void dont_optimize omit_frame_pointer __kbd_evt() {
 	handler(k);
 }
 
+__mykapi mykt_int_32 kbd_init() {
+	// disable devices
+	x86_outb(0x64, (mykt_int_8) 0xad);
+	
+	// flush output buffers
+	x86_inb(0x60);
+
+	// disable interrupt 0 and 1
+	// and translation
+	x86_outb(0x64, (mykt_int_8) 0x20);
+	mykt_int_8 ccb = (mykt_int_8) (x86_inb(0x60) & 0xbc);
+	x86_outb(0x64, 0x60);
+	x86_outb(0x60, ccb);
+
+	// reset device and check for kbd ACK
+	x86_outb(0x60, (mykt_int_8) 0xff);
+	mykt_int_8 reset_ack = x86_inb(0x60);
+	mykt_int_8 self_test_pass = x86_inb(0x60);
+	if(reset_ack != (mykt_int_8) 0xfa || 
+		self_test_pass != (mykt_int_8) 0xaa) {
+		return -3;
+	}
+
+	// set scan code set 1
+	x86_outb(0x60, (mykt_int_8) 0xf0);
+	if(x86_inb(0x60) != (mykt_int_8) 0xfa) {
+		return -2;
+	}
+
+	x86_outb(0x60, (mykt_int_8) 1);
+	if(x86_inb(0x60) != (mykt_int_8) 0xfa) {
+		return -1;
+	}
+
+	isr_register_irq_handler(IRQ_KEYBOARD, __kbd_evt);
+
+	// enable interrupt 0
+	// keep interrupt 1 and translation disabled
+	x86_outb(0x64, (mykt_int_8) 0x60);
+	x86_outb(0x60, (mykt_int_8) (ccb | 1));
+
+	// enable device
+	x86_outb(0x64, (mykt_int_8) 0xae);
+
+	return 0;
+}
+
+__mykapi void kbd_set_handler(kbd_evt_fp h) {
+	handler = h;
+}

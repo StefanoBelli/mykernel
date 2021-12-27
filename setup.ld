@@ -14,7 +14,6 @@ SECTIONS {
 		kernel/isr_stub.o (.text)
 		kernel/misc.o (.text)
 		kernel/excps.o (.text)
-		kernel/irqs.o (.text)
 		kernel/ksleep.o (.text)
 		driver/vga.o (.text)
 		driver/kbd.o (.text)
