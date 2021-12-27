@@ -30,12 +30,8 @@
 #define KBD_KEY_PAYLD_F2 2
 #define KBD_KEY_PAYLD_F1 1
 
-typedef mykt_int_16 kbd_key;
-typedef mykt_uint_8 kbd_key_payld_ch;
-
-/*
 typedef enum {
-	FN_1,
+	FN_1 = KBD_KEY_PAYLD_F1,
 	FN_2,
 	FN_3,
 	FN_4,
@@ -50,33 +46,32 @@ typedef enum {
 } kbd_key_payld_fn;
 
 typedef enum {
-	ARROW_UP,
+	ARROW_UP = KBD_KEY_PAYLD_ARROW_UP,
 	ARROW_LEFT,
 	ARROW_RIGHT,
 	ARROW_DOWN
 } kbd_key_payld_arrow;
 
 typedef enum {
-	LOCK_SCROLL,
+	LOCK_SCROLL = KBD_KEY_PAYLD_SCROLL_LOCK,
 	LOCK_NUM,
 	LOCK_CAPS
 } kbd_key_payld_lock;
 
 typedef enum {
-	SHIFT_LEFT,
+	SHIFT_LEFT = KBD_KEY_PAYLD_LEFT_SHIFT,
 	SHIFT_RIGHT
 } kbd_key_payld_shift;
 
 typedef enum {
-	CTRL_LEFT,
+	CTRL_LEFT = KBD_KEY_PAYLD_LEFT_CTRL,
 	CTRL_RIGHT
 } kbd_key_payld_ctrl;
 
 typedef enum {
-	ALT_LEFT,
+	ALT_LEFT = KBD_KEY_PAYLD_LEFT_ALT,
 	ALT_RIGHT
 } kbd_key_payld_alt;
-*/
 
 typedef enum {
 	KEY_TYPE_CHAR,
@@ -97,6 +92,8 @@ typedef enum {
 #define kbd_key_get_type(k) ((k & 0x700) >> 8)
 #define kbd_key_get_payld(k) (k & 0xff)
 
+typedef mykt_int_16 kbd_key;
+typedef mykt_uint_8 kbd_key_payld_ch;
 typedef void (*__mykapi kbd_evt_fp)(kbd_key);
 
 __mykapi mykt_int_32 kbd_init();
