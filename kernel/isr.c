@@ -114,7 +114,7 @@ void dont_optimize omit_frame_pointer isr_handler(interrupt_frame frame) {
 	}
 
 	if(frame.intno >= ISR_START_IRQ && frame.intno < N_ISR) {
-		x86_pic_eoi((mykt_uint_8)frame.intno);
+		x86_pic_eoi((mykt_uint_8) frame.intno - ISR_START_IRQ);
 	}
 }
 
@@ -143,5 +143,5 @@ void isr_log_interrupt_frame(interrupt_frame f) {
 }
 
 __mykapi void isr_register_irq_handler(irqn i, isrh_fp h) {
-	final_handlers[i + 32] = h;
+	final_handlers[i + ISR_START_IRQ] = h;
 }

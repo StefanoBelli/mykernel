@@ -38,8 +38,8 @@ __mykapi void x86_pic_remap() {
 	x86_outb(PIC2_DATA, ZERO_DATA_REG);
 }
 
-__mykapi void x86_pic_eoi(mykt_uint_8 intno) {
-	if(intno >= 40) {
+__mykapi void x86_pic_eoi(mykt_uint_8 irq) {
+	if(irq >= 8) {
 		x86_outb(PIC2_CTRL, EOI);
 	}
 
