@@ -47,31 +47,31 @@ __mykapi void x86_pic_eoi(mykt_uint_8 irq) {
 }
 
 __mykapi void x86_pic_set_mask(mykt_uint_8 irq) {
-    mykt_int_16 port;
-    mykt_int_8 value;
+	mykt_int_16 port;
+	mykt_int_8 value;
 
-    if(irq < 8) {
-        port = PIC1_DATA;
-    } else {
-        port = PIC2_DATA;
-        irq -= 8;
-    }
-    
-    value = (mykt_int_8) (x86_inb(port) | (1 << irq));
-    x86_outb(port, value);
+	if(irq < 8) {
+		port = PIC1_DATA;
+	} else {
+		port = PIC2_DATA;
+		irq -= 8;
+	}
+	
+	value = (mykt_int_8) (x86_inb(port) | (1 << irq));
+	x86_outb(port, value);
 }
 
 __mykapi void x86_pic_clear_mask(mykt_uint_8 irq) {
-    mykt_int_16 port;
-    mykt_int_8 value;
+	mykt_int_16 port;
+	mykt_int_8 value;
 
-    if(irq < 8) {
-        port = PIC1_DATA;
-    } else {
-        port = PIC2_DATA;
-        irq -= 8;
-    }
+	if(irq < 8) {
+		port = PIC1_DATA;
+	} else {
+		port = PIC2_DATA;
+		irq -= 8;
+	}
 
-    value = (mykt_int_8) (x86_inb(port) & ~(1 << irq));
-    x86_outb(port, value);
+	value = (mykt_int_8) (x86_inb(port) & ~(1 << irq));
+	x86_outb(port, value);
 }
