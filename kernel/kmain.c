@@ -14,7 +14,7 @@ __mykapi void kvga_kprintf_init() {
 	kvga_cursor(0, 0);
 }
 
-__mykapi void kvga_kprintf_printer(const mykt_int_8* buf, mykt_uint_32 len) {
+__mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 	kvga_write(
 			buf, 
 			VGA_TEXT_COLOR_BLACK, 
@@ -36,7 +36,7 @@ void kmain() {
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	ksleep_init();
 
-	mykt_int_32 kbd_init_fail = kbd_init();
+	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
 		kprintf("kbd init failed (%d)\n", kbd_init_fail);
 		goto fail_halt;

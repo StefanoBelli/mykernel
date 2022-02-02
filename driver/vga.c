@@ -1,22 +1,22 @@
 #include <x86/x86.h>
 #include "vga.h"
 
-#define framebuf(x, y) *((mykt_int_16*)(0xb8000 + ((y * VGA_WIDTH + x) << 1))) 
+#define framebuf(x, y) *((word*)(0xb8000 + ((y * VGA_WIDTH + x) << 1)))
 
-__mykapi mykt_int_16 vga_text_getc(mykt_uint_32 x, mykt_uint_32 y) {
+__mykapi word vga_text_getc(udword x, udword y) {
 	return framebuf(x,y);
 }
 
-__mykapi void vga_text_putc(mykt_int_8 ch, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_32 x, mykt_uint_32 y) {
-	framebuf(x,y) = (mykt_int_16) (((bg << 4) | (fg & 0x0f) << 8) | ch);
+__mykapi void vga_text_putc(byte ch, byte bg, byte fg, udword x, udword y) {
+	framebuf(x,y) = (word) (((bg << 4) | (fg & 0x0f) << 8) | ch);
 }
 
-__mykapi void vga_cursor_enable(mykt_uint_8 cursor_start, mykt_uint_8 cursor_end) {
+__mykapi void vga_cursor_enable(ubyte cursor_start, ubyte cursor_end) {
 	x86_outb(0x3d4, 0x0a);
-	x86_outb(0x3d5, (mykt_int_8) ((x86_inb(0x3d5) & 0xc0) | cursor_start));
+	x86_outb(0x3d5, (byte) ((x86_inb(0x3d5) & 0xc0) | cursor_start));
 
 	x86_outb(0x3d4, 0x0b);
-	x86_outb(0x3d5, (mykt_int_8) ((x86_inb(0x3d5) & 0xe0) | cursor_end));
+	x86_outb(0x3d5, (byte) ((x86_inb(0x3d5) & 0xe0) | cursor_end));
 }
 
 __mykapi void vga_cursor_disable() {
@@ -24,25 +24,25 @@ __mykapi void vga_cursor_disable() {
 	x86_outb(0x3d5, 0x20);
 }
 
-__mykapi void vga_cursor_set_pos(mykt_uint_16 x, mykt_uint_16 y) {
-	mykt_uint_16 pos = (mykt_uint_16) (y * VGA_WIDTH + x);
+__mykapi void vga_cursor_set_pos(uword x, uword y) {
+	uword pos = (uword) (y * VGA_WIDTH + x);
 
 	x86_outb(0x3d4, 0x0f);
-	x86_outb(0x3d5, (mykt_int_8) (pos & 0xff));
+	x86_outb(0x3d5, (byte) (pos & 0xff));
 	x86_outb(0x3d4, 0x0e);
-	x86_outb(0x3d5, (mykt_int_8) ((pos >> 8) & 0xff));
+	x86_outb(0x3d5, (byte) ((pos >> 8) & 0xff));
 }
 
-__mykapi mykt_pair_uint_16 vga_cursor_get_pos() {
-	mykt_uint_16 pos = 0;
+__mykapi pair_uword vga_cursor_get_pos() {
+	uword pos = 0;
 
 	x86_outb(0x3d4, 0x0f);
-	pos |= (mykt_uint_16) x86_inb(0x3d5);
+	pos |= (uword) x86_inb(0x3d5);
 
 	x86_outb(0x3d4, 0x0e);
-	pos |= (mykt_uint_16) (x86_inb(0x3d5) << 8);
+	pos |= (uword) (x86_inb(0x3d5) << 8);
 
-	mykt_pair_uint_16 coord;
+	pair_uword coord;
 	coord.x = pos % VGA_WIDTH;
 	coord.y = pos / VGA_WIDTH;
 

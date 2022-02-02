@@ -75,7 +75,7 @@ static const entry_isr_handler_fp entry_handlers[N_ISR] = {
 	isr40, isr41, isr42, isr43, isr44, isr45, isr46, isr47
 };
 
-static const mykt_int_8* isr_name[N_ISR] = {
+static const byte* isr_name[N_ISR] = {
 	"divide by zero exception","debug exception","nmi exception",
 	"breakpoint exception","overflow exception","bound range exceeded exception",
 	"invalid opcode exception","device not available exception","double fault exception",
@@ -95,11 +95,11 @@ static const mykt_int_8* isr_name[N_ISR] = {
 };
 
 __mykapi void isr_set_int_gates() {
-	for(mykt_uint_8 i = ISR_START_EXCP; i < ISR_START_IRQ; ++i) {
+	for(ubyte i = ISR_START_EXCP; i < ISR_START_IRQ; ++i) {
 		x86_set_int_gate(IDT_EXCP, i, entry_handlers[i]);
 	}
 	
-	for(mykt_uint_8 i = ISR_START_IRQ; i < N_ISR; ++i) {
+	for(ubyte i = ISR_START_IRQ; i < N_ISR; ++i) {
 		x86_set_int_gate(IDT_IRQ, i, entry_handlers[i]);
 	}
 }
@@ -114,7 +114,7 @@ void dont_optimize omit_frame_pointer isr_handler(interrupt_frame frame) {
 	}
 
 	if(frame.intno >= ISR_START_IRQ && frame.intno < N_ISR) {
-		x86_pic_eoi((mykt_uint_8) frame.intno - ISR_START_IRQ);
+		x86_pic_eoi((ubyte) frame.intno - ISR_START_IRQ);
 	}
 }
 

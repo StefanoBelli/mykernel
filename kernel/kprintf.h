@@ -6,7 +6,7 @@
 
 #define KPRINTF_BUFSIZE 8192
 
-typedef void(*__mykapi output_printer_fp)(const mykt_int_8*, mykt_uint_32);
+typedef void(*__mykapi output_printer_fp)(const byte*, udword);
 typedef void(*__mykapi your_init_steps_fp)();
 
 /*
@@ -23,7 +23,7 @@ typedef void(*__mykapi your_init_steps_fp)();
  * %d: decimal integer
  * %u: unsigned decimal integer
  */
-mykt_uint_32 kprintf(const mykt_int_8* fmt, ...);
+udword kprintf(const byte* fmt, ...);
 __mykapi void kprintf_init(output_printer_fp print, your_init_steps_fp more_steps);
 __mykapi void kprintf_flush();
 

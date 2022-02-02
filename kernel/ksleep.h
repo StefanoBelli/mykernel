@@ -4,7 +4,7 @@
 #include <misc/gcc.h>
 #include <misc/types.h>
 
-__mykapi void ksleep(mykt_uint_32);
+__mykapi void ksleep(udword);
 __mykapi void ksleep_init();
 
 #endif

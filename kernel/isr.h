@@ -24,25 +24,25 @@ typedef enum {
 } irqn;
 
 typedef struct {
-	mykt_uint_32 gs;
-	mykt_uint_32 fs;
-	mykt_uint_32 es;
-	mykt_uint_32 ds;
-	mykt_uint_32 edi;
-	mykt_uint_32 esi;
-	mykt_uint_32 ebp;
-	mykt_uint_32 esp;
-	mykt_uint_32 ebx;
-	mykt_uint_32 edx;
-	mykt_uint_32 ecx;
-	mykt_uint_32 eax;
-	mykt_uint_32 intno;
-	mykt_uint_32 ec;
-	mykt_uint_32 eip;
-	mykt_uint_32 cs;
-	mykt_uint_32 efl;
-	mykt_uint_32 useresp;
-	mykt_uint_32 ss;
+	udword gs;
+	udword fs;
+	udword es;
+	udword ds;
+	udword edi;
+	udword esi;
+	udword ebp;
+	udword esp;
+	udword ebx;
+	udword edx;
+	udword ecx;
+	udword eax;
+	udword intno;
+	udword ec;
+	udword eip;
+	udword cs;
+	udword efl;
+	udword useresp;
+	udword ss;
 } interrupt_frame;
 
 typedef void (*isrh_fp)(interrupt_frame);

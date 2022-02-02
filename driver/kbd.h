@@ -92,11 +92,11 @@ typedef enum {
 #define kbd_key_get_type(k) ((k & 0x700) >> 8)
 #define kbd_key_get_payld(k) (k & 0xff)
 
-typedef mykt_int_16 kbd_key;
-typedef mykt_uint_8 kbd_key_payld_ch;
+typedef word kbd_key;
+typedef ubyte kbd_key_payld_ch;
 typedef void (*__mykapi kbd_evt_fp)(kbd_key);
 
-__mykapi mykt_int_32 kbd_init();
+__mykapi dword kbd_init();
 __mykapi void kbd_set_handler(kbd_evt_fp);
 
 #endif

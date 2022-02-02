@@ -16,7 +16,7 @@
 #define x86_lidt(i) \
 	__asm__ __volatile__ ("lidtl (%0);" :: "r"(i));
 
-__mykapi void x86_outb(mykt_int_16 port, mykt_int_8 data);
-__mykapi mykt_int_8 x86_inb(mykt_int_16 port);
+__mykapi void x86_outb(word port, byte data);
+__mykapi byte x86_inb(word port);
 
 #endif

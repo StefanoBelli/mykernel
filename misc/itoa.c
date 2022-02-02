@@ -1,15 +1,15 @@
 #include "itoa.h"
 
-__mykapi mykt_int_8* ltoa(mykt_int_32 value, mykt_int_8* buf) {
-	mykt_int_32 numlen = 0;
-	mykt_int_32 sign = 0;
+__mykapi byte* ltoa(dword value, byte* buf) {
+	dword numlen = 0;
+	dword sign = 0;
 
 	if(value < 0) {
 		sign = 1;
 		value = -value;
 	}
 
-	mykt_int_32 oldvalue = value;
+	dword oldvalue = value;
 
 	do {
 		++numlen;
@@ -17,9 +17,9 @@ __mykapi mykt_int_8* ltoa(mykt_int_32 value, mykt_int_8* buf) {
 
 	buf[numlen + sign] = 0;
 
-	mykt_int_32 i;
+	dword i;
 	for (i = numlen - 1 + sign; i >= sign; --i) {
-		buf[i] = (mykt_int_8) (oldvalue % 10) + 48;
+		buf[i] = (byte) (oldvalue % 10) + 48;
 		oldvalue /= 10;
 	}
 
@@ -31,9 +31,9 @@ __mykapi mykt_int_8* ltoa(mykt_int_32 value, mykt_int_8* buf) {
 }
 
 /* unsigned */
-__mykapi mykt_int_8* ultoa(mykt_uint_32 value, mykt_int_8* buf, mykt_uint_8 base) {
-	mykt_int_32 numlen = 0;
-	mykt_uint_32 oldvalue = value;
+__mykapi byte* ultoa(udword value, byte* buf, ubyte base) {
+	dword numlen = 0;
+	udword oldvalue = value;
 
 	do {
 		++numlen;
@@ -41,18 +41,18 @@ __mykapi mykt_int_8* ultoa(mykt_uint_32 value, mykt_int_8* buf, mykt_uint_8 base
 
 	buf[numlen] = 0;
 
-	for (mykt_int_32 i = numlen - 1; i >= 0; --i) {
-		mykt_uint_32 rem = oldvalue % base;
-		buf[i] = (mykt_int_8) (rem > 9 ? rem + 87 : rem + 48);
+	for (dword i = numlen - 1; i >= 0; --i) {
+		udword rem = oldvalue % base;
+		buf[i] = (byte) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 
 	return buf;
 }
 
-__mykapi mykt_int_8* ustoa(mykt_uint_16 value, mykt_int_8* buf, mykt_uint_8 base) {
-	mykt_int_32 numlen = 0;
-	mykt_uint_16 oldvalue = value;
+__mykapi byte* ustoa(uword value, byte* buf, ubyte base) {
+	dword numlen = 0;
+	uword oldvalue = value;
 
 	do {
 		++numlen;
@@ -60,18 +60,18 @@ __mykapi mykt_int_8* ustoa(mykt_uint_16 value, mykt_int_8* buf, mykt_uint_8 base
 
 	buf[numlen] = 0;
 
-	for (mykt_int_32 i = numlen - 1; i >= 0; --i) {
-		mykt_uint_32 rem = oldvalue % base;
-		buf[i] = (mykt_int_8) (rem > 9 ? rem + 87 : rem + 48);
+	for (dword i = numlen - 1; i >= 0; --i) {
+		udword rem = oldvalue % base;
+		buf[i] = (byte) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 
 	return buf;
 }
 
-__mykapi mykt_int_8* ubtoa(mykt_uint_8 value, mykt_int_8* buf, mykt_uint_8 base) {
-	mykt_int_32 numlen = 0;
-	mykt_uint_8 oldvalue = value;
+__mykapi byte* ubtoa(ubyte value, byte* buf, ubyte base) {
+	dword numlen = 0;
+	ubyte oldvalue = value;
 
 	do {
 		++numlen;
@@ -79,9 +79,9 @@ __mykapi mykt_int_8* ubtoa(mykt_uint_8 value, mykt_int_8* buf, mykt_uint_8 base)
 
 	buf[numlen] = 0;
 
-	for (mykt_int_32 i = numlen - 1; i >= 0; --i) {
-		mykt_uint_32 rem = oldvalue % base;
-		buf[i] = (mykt_int_8) (rem > 9 ? rem + 87 : rem + 48);
+	for (dword i = numlen - 1; i >= 0; --i) {
+		udword rem = oldvalue % base;
+		buf[i] = (byte) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 

@@ -1,19 +1,19 @@
 #include "kvga.h"
 #include <driver/vga.h>
 
-static mykt_uint_16 ix;
-static mykt_uint_16 jy;
+static uword ix;
+static uword jy;
 
 __mykapi void kvga_set_start_pos() {
-	mykt_pair_uint_16 start_pos = vga_cursor_get_pos();
+	pair_uword start_pos = vga_cursor_get_pos();
 	ix = 0;
 	jy = start_pos.y + 1;
 }
 
-__mykapi void kvga_write(const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, mykt_uint_32 len, 
-		__mykapi void(*max_height_handle_policy)(mykt_int_8, mykt_int_8)) {
+__mykapi void kvga_write(const byte* data, byte bg, byte fg, udword len,
+						 __mykapi void(*max_height_handle_policy)(byte, byte)) {
 
-	for(mykt_uint_32 i = 0; i < len; ++i) {
+	for(udword i = 0; i < len; ++i) {
 		if(ix >= VGA_WIDTH) {
 			ix = 0;
 			++jy;
@@ -37,7 +37,7 @@ __mykapi void kvga_write(const mykt_int_8* data, mykt_int_8 bg, mykt_int_8 fg, m
 	}
 }
 
-__mykapi void kvga_cursor(mykt_uint_8 cur_start, mykt_uint_8 cur_end) {
+__mykapi void kvga_cursor(ubyte cur_start, ubyte cur_end) {
 	if(cur_start == 0 && cur_end == 0) {
 		vga_cursor_disable();
 	} else {
@@ -49,9 +49,9 @@ __mykapi void kvga_update_cursor() {
 	vga_cursor_set_pos(ix, jy);
 }
 
-__mykapi void kvga_clear(mykt_int_8 bg, mykt_int_8 fg) {
-	for(mykt_uint_32 k = 0; k < VGA_WIDTH; ++k) {
-		for(mykt_uint_32 t = 0; t < VGA_HEIGHT; ++t) {
+__mykapi void kvga_clear(byte bg, byte fg) {
+	for(udword k = 0; k < VGA_WIDTH; ++k) {
+		for(udword t = 0; t < VGA_HEIGHT; ++t) {
 			vga_text_putc(' ', bg, fg, k, t);
 		}
 	}
@@ -60,15 +60,15 @@ __mykapi void kvga_clear(mykt_int_8 bg, mykt_int_8 fg) {
 	jy = 0;
 }
 
-__mykapi void kvga_scroll(mykt_int_8 bg, mykt_int_8 fg) {
-	for(mykt_uint_32 k = 0; k < VGA_WIDTH; ++k) {
-		for(mykt_uint_32 t = 1; t < VGA_HEIGHT; ++t) {
-			mykt_int_8 ch = (mykt_int_8) (vga_text_getc(k, t) & 0xff);
+__mykapi void kvga_scroll(byte bg, byte fg) {
+	for(udword k = 0; k < VGA_WIDTH; ++k) {
+		for(udword t = 1; t < VGA_HEIGHT; ++t) {
+			byte ch = (byte) (vga_text_getc(k, t) & 0xff);
 			vga_text_putc(ch, bg, fg, k, t - 1);
 		}
 	}
 	
-	for (mykt_uint_32 k = 0; k < VGA_WIDTH; ++k) {
+	for (udword k = 0; k < VGA_WIDTH; ++k) {
 		vga_text_putc(' ', bg, fg, k, VGA_HEIGHT - 1);
 	}
 

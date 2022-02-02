@@ -4,6 +4,6 @@
 #include <misc/gcc.h>
 #include "types.h"
 
-__mykapi void x86_pit_set_freq(mykt_uint_32);
+__mykapi void x86_pit_set_freq(udword);
 
 #endif

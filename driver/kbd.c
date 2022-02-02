@@ -28,7 +28,7 @@
 #define F2 KBD_KEY_PAYLD_F2
 #define F1 KBD_KEY_PAYLD_F1
 
-static const mykt_int_8 ss1[89] = {
+static const byte ss1[89] = {
 	0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
 	'-', '=', '\b', '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u',
 	'i', 'o', 'p', '[', ']', '\n', LC, 'a', 's', 'd', 'f', 'g', 
@@ -39,7 +39,7 @@ static const mykt_int_8 ss1[89] = {
 	FB, FC
 };
 
-static const mykt_int_8 e0_ss1[81] = {
+static const byte e0_ss1[81] = {
 	[0x1c] = '\n',
 	[0x1d] = RC,
 	[0x35] = '/',
@@ -53,15 +53,15 @@ static const mykt_int_8 e0_ss1[81] = {
 static kbd_evt_fp handler;
 
 static void dont_optimize omit_frame_pointer __kbd_evt(unused interrupt_frame f) {
-	static mykt_uint_8 expects_sb = 0;
-	mykt_uint_8 fb = (mykt_uint_8) x86_inb(0x60);
-	mykt_uint_8 sb;
+	static ubyte expects_sb = 0;
+	ubyte fb = (ubyte) x86_inb(0x60);
+	ubyte sb;
 
 	if(!expects_sb && fb == 0xe0) {
 		expects_sb = 1;
 		return;
 	} else if(expects_sb) {
-		sb = (mykt_uint_8) x86_inb(0x60);
+		sb = (ubyte) x86_inb(0x60);
 	}
 
 	if(handler == 0) {
@@ -69,9 +69,9 @@ static void dont_optimize omit_frame_pointer __kbd_evt(unused interrupt_frame f)
 		return;
 	}
 
-	const mykt_int_8* ssp = 0;
-	mykt_uint_8 rel = 0;
-	mykt_uint_8 idx = 0;
+	const byte* ssp = 0;
+	ubyte rel = 0;
+	ubyte idx = 0;
 	kbd_key k = 0;
 
 	if(expects_sb) {
@@ -96,7 +96,7 @@ static void dont_optimize omit_frame_pointer __kbd_evt(unused interrupt_frame f)
 		idx -= 128;
 	}
 
-	mykt_int_8 ch = ssp[idx];
+	byte ch = ssp[idx];
 	k = (kbd_key) (k | ch);
 
 	if(ch >= F1 && ch <= FC) {
@@ -118,37 +118,37 @@ static void dont_optimize omit_frame_pointer __kbd_evt(unused interrupt_frame f)
 	handler(k);
 }
 
-__mykapi mykt_int_32 kbd_init() {
+__mykapi dword kbd_init() {
 	// disable devices
-	x86_outb(0x64, (mykt_int_8) 0xad);
+	x86_outb(0x64, (byte) 0xad);
 	
 	// flush output buffers
 	x86_inb(0x60);
 
 	// disable interrupt 0 and 1
 	// and translation
-	x86_outb(0x64, (mykt_int_8) 0x20);
-	mykt_int_8 ccb = (mykt_int_8) (x86_inb(0x60) & 0xbc);
+	x86_outb(0x64, (byte) 0x20);
+	byte ccb = (byte) (x86_inb(0x60) & 0xbc);
 	x86_outb(0x64, 0x60);
 	x86_outb(0x60, ccb);
 
 	// reset device and check for kbd ACK
-	x86_outb(0x60, (mykt_int_8) 0xff);
-	mykt_int_8 reset_ack = x86_inb(0x60);
-	mykt_int_8 self_test_pass = x86_inb(0x60);
-	if(reset_ack != (mykt_int_8) 0xfa || 
-		self_test_pass != (mykt_int_8) 0xaa) {
+	x86_outb(0x60, (byte) 0xff);
+	byte reset_ack = x86_inb(0x60);
+	byte self_test_pass = x86_inb(0x60);
+	if(reset_ack != (byte) 0xfa ||
+		self_test_pass != (byte) 0xaa) {
 		return -3;
 	}
 
 	// set scan code set 1
-	x86_outb(0x60, (mykt_int_8) 0xf0);
-	if(x86_inb(0x60) != (mykt_int_8) 0xfa) {
+	x86_outb(0x60, (byte) 0xf0);
+	if(x86_inb(0x60) != (byte) 0xfa) {
 		return -2;
 	}
 
-	x86_outb(0x60, (mykt_int_8) 1);
-	if(x86_inb(0x60) != (mykt_int_8) 0xfa) {
+	x86_outb(0x60, (byte) 1);
+	if(x86_inb(0x60) != (byte) 0xfa) {
 		return -1;
 	}
 
@@ -156,11 +156,11 @@ __mykapi mykt_int_32 kbd_init() {
 
 	// enable interrupt 0
 	// keep interrupt 1 and translation disabled
-	x86_outb(0x64, (mykt_int_8) 0x60);
-	x86_outb(0x60, (mykt_int_8) (ccb | 1));
+	x86_outb(0x64, (byte) 0x60);
+	x86_outb(0x60, (byte) (ccb | 1));
 
 	// enable device
-	x86_outb(0x64, (mykt_int_8) 0xae);
+	x86_outb(0x64, (byte) 0xae);
 
 	return 0;
 }
