@@ -2,7 +2,7 @@ SHELL = /bin/sh
 AS = as
 RM = rm -f
 ASFLAGS = --32
-OBJS = boot.o
+OBJS = boot.o head.o
 
 all: $(OBJS)
 

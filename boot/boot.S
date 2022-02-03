@@ -1,5 +1,5 @@
 .globl _start
-.extern kmain
+.extern head
 .text
 _start:
 .code16
@@ -51,7 +51,7 @@ call bios_printzln
 jmp cpu_halt
 
 load_kernel:
-movw $0x210, %ax
+movw $0x220, %ax
 movw $2, %cx
 xorb %dh, %dh
 movw $0xffff, %bx
@@ -81,7 +81,7 @@ movw %ax, %gs
 movw %ax, %fs
 movw %ax, %ss
 movl $0x80000, %esp
-call kmain
+jmp head
 
 .code16
 cpu_halt:
