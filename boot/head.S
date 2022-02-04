@@ -17,7 +17,7 @@ kernel_page_tables:
 	.set i, i + 1
 	.endr
 # 0x102000, virt=0xc0002000
-	.set i, 1281
+	.set i, 1280
 	.rept 1024
 	.int (i * 0x1000) | 3
 	.set i, i + 1
