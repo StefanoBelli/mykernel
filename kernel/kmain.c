@@ -8,6 +8,7 @@
 #include "ksleep.h"
 #include "isr.h"
 #include "misc.h"
+#include "mm.h"
 
 __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();
@@ -25,6 +26,7 @@ __mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 }
 
 void kmain() {
+	mm_init();
 	x86_idt_install();
 	x86_pic_remap();
 	x86_pic_set_mask(0);

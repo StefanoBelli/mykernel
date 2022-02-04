@@ -19,6 +19,7 @@ SECTIONS {
 		kernel/misc.o (.text)
 		kernel/excps.o (.text)
 		kernel/ksleep.o (.text)
+		kernel/mm.o (.text)
 		driver/vga.o (.text)
 		driver/kbd.o (.text)
 		x86/x86.o (.text)
