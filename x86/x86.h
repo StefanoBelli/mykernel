@@ -14,7 +14,10 @@
 	__asm__ __volatile__ ("sti;")
 
 #define x86_lidt(i) \
-	__asm__ __volatile__ ("lidtl (%0);" :: "r"(i));
+	__asm__ __volatile__ ("lidtl (%0);" :: "r"(i))
+
+#define x86_invlpg(va) \
+	__asm__ __volatile__ ("invlpg (%0);" :: "r"(va) : "memory")
 
 __mykapi void x86_outb(word port, byte data);
 __mykapi byte x86_inb(word port);
