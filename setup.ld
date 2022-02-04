@@ -10,7 +10,7 @@ SECTIONS {
 		boot/head.o (.text)
 	}
 
-	kernel.text 0x102018 : AT (0x2218) {
+	kernel.text /*virt=*/ 0xc0003018 /*phys=0x103018*/ : AT (0x3218) {
 		kernel/kmain.o (.text)
 		kernel/kvga.o (.text)
 		kernel/kprintf.o (.text)
