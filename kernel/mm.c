@@ -1,3 +1,4 @@
+#include <x86/x86.h>
 #include <misc/gcc.h>
 #include <misc/types.h>
 #include "mm.h"
@@ -25,6 +26,10 @@ typedef struct {
 	udword addr : 20;
 } packed mm_page;
 
-void mm_init() {
+static mm_pgtbl* pagedir = (mm_pgtbl*) 0xc0003000;
 
+void mm_init() {
+	pagedir[0].present = 0;
+	
+	// invlpg on idmap virt addrs 0 .. 1024 * 4096
 }

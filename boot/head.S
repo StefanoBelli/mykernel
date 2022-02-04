@@ -3,7 +3,7 @@
 .text
 
 # 0x100000, virt=0xc0000000
-bootstrap_idmap_page_table:
+bootstrap_page_table:
 	.set i, 0
 	.rept 1024
 	.int (i * 0x1000) | 3
@@ -28,7 +28,8 @@ page_tables_directory:
 	.fill 767, 4, 2			# 767
 	.int 0x101000 | 3		# 768
 	.int 0x102000 | 3		# 769
-	.fill 254, 4, 2
+	.int 0x100000 | 3		# 770
+	.fill 253, 4, 2
 
 head:
 	movl $0x103000, %eax
