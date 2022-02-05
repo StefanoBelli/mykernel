@@ -80,7 +80,7 @@ movw %ax, %es
 movw %ax, %gs
 movw %ax, %fs
 movw %ax, %ss
-movl $0xc07fffff, %esp
+movl $0xc08effff, %esp
 jmp head
 
 .code16

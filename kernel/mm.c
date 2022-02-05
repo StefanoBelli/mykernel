@@ -29,8 +29,8 @@ typedef struct {
 static mm_pgtbl* pagedir = (mm_pgtbl*) 0xc0003000;
 
 void mm_init() {
-	pagedir[0].present = 0;
-	
+	*((udword*)pagedir) = 2;
+
 	for(udword i = 0; i < 1024; ++i) {
 		x86_invlpg(i * 4096);
 	}
