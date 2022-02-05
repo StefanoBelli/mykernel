@@ -2,6 +2,7 @@ SHELL = /bin/sh
 LD = ld
 OBJCOPY = objcopy
 DD = dd
+QEMU = qemu-system-i386
 export CFLAGS = \
 	-O3 \
 	-march=i386 \
@@ -56,5 +57,8 @@ clean:
 		cd ..; \
 	done
 	$(RM) $(MYKERNEL_ELF) $(MYKERNEL_BIN) $(MYKERNEL_IMG)
+
+run: all
+	$(QEMU) -fda mykernel.img -vga cirrus -d cpu_reset -d int
 
 .PHONY: all, clean
