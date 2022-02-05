@@ -61,4 +61,4 @@ clean:
 run: all
 	$(QEMU) -fda mykernel.img -vga cirrus -d cpu_reset -d int
 
-.PHONY: all, clean
+.PHONY: all, clean, run
