@@ -35,4 +35,8 @@ __mykapi void mm_init() {
 	}
 
 	((udword*)pagedir)[769] = 0x100000 | 3;
+	
+	for(udword i = 256; i < 1024; ++i) {
+		*((udword*)0xc0000000 + i) = 2; 
+	}
 }
