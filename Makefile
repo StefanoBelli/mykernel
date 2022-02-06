@@ -59,6 +59,6 @@ clean:
 	$(RM) $(MYKERNEL_ELF) $(MYKERNEL_BIN) $(MYKERNEL_IMG)
 
 run: all
-	$(QEMU) -fda mykernel.img -vga cirrus -d cpu_reset -d int
+	$(QEMU) -fda $(MYKERNEL_IMG) -vga cirrus -d cpu_reset -d int
 
 .PHONY: all, clean, run
