@@ -1,7 +1,7 @@
 #include <x86/x86.h>
 #include "vga.h"
 
-#define framebuf(x, y) *((word*)(0xc04b8000 + ((y * VGA_WIDTH + x) << 1)))
+#define framebuf(x, y) *((word*)(0xffcb8000 + ((y * VGA_WIDTH + x) << 1)))
 
 __mykapi word vga_text_getc(udword x, udword y) {
 	return framebuf(x,y);
