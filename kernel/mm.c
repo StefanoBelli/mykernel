@@ -1,5 +1,4 @@
 #include <x86/x86.h>
-#include <misc/gcc.h>
 #include <misc/types.h>
 #include "mm.h"
 
@@ -28,7 +27,7 @@ typedef struct {
 
 static mm_pgtbl* pagedir = (mm_pgtbl*) 0xc0002000;
 
-void mm_init() {
+__mykapi void mm_init() {
 	*(udword*)pagedir = 2;
 
 	for(udword i = 0; i < 1024; ++i) {

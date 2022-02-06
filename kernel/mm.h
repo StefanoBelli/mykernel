@@ -1,6 +1,8 @@
 #ifndef KERNEL_MM_H
 #define KERNEL_MM_H
 
-void mm_init();
+#include <misc/gcc.h>
+
+__mykapi void mm_init();
 
 #endif
