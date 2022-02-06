@@ -10,7 +10,7 @@ SECTIONS {
 		boot/head.o (.text)
 	}
 
-	kernel.text /*virt=*/ 0xc000301d /*phys=0x104018*/ : AT (0x321d) {
+	kernel.text /*virt=*/ 0xc000301d : AT (0x321d) {
 		kernel/kmain.o (.text)
 		kernel/kvga.o (.text)
 		kernel/kprintf.o (.text)
@@ -19,7 +19,6 @@ SECTIONS {
 		kernel/misc.o (.text)
 		kernel/excps.o (.text)
 		kernel/ksleep.o (.text)
-		kernel/mm.o (.text)
 		driver/vga.o (.text)
 		driver/kbd.o (.text)
 		x86/x86.o (.text)

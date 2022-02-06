@@ -8,7 +8,6 @@
 #include "ksleep.h"
 #include "isr.h"
 #include "misc.h"
-#include "mm.h"
 
 __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();
@@ -25,8 +24,25 @@ __mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 			);
 }
 
+/*
+ * PDT phys = 0x100000, virt = 0xc0000000
+ * bootstrap PT phys = 0x101000, virt = 0xc0001000
+ * kernel PT phys = 0x102000, virt = 0xc0002000
+ */
+__mykapi void finalize_minimal_paging_setup() {
+	*(udword*)0xc0000000 = 2;
+
+	for(udword i = 0; i < 1024; ++i) {
+		x86_invlpg(i * 4096);
+	}
+
+	for(udword i = 256; i < 1024; ++i) {
+		*((udword*)0xc0001000 + i) = 2;
+	}
+}
+
 void kmain() {
-	mm_init();
+	finalize_minimal_paging_setup();
 	x86_idt_install();
 	x86_pic_remap();
 	x86_pic_set_mask(0);

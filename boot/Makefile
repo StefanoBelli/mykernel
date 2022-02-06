@@ -1,12 +1,14 @@
 SHELL = /bin/sh
+CC = gcc
 AS = as
-RM = rm -f
 ASFLAGS = --32
-OBJS = $(patsubst %.S, %.o, $(wildcard *.S))
+RM = rm -f
+OBJS = $(patsubst %.S, %.o, $(wildcard *.S)) \
+	   $(patsubst %.c, %.o, $(wildcard *.c))
 
 all: $(OBJS)
 
-$(OBJS): %.o: %.S
+%.o: %.S
 	$(AS) $(ASFLAGS) $< -o $@
 
 clean:
