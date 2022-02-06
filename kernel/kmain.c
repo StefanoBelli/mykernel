@@ -38,6 +38,7 @@ __mykapi void finalize_minimal_paging_setup() {
 
 	for(udword i = 256; i < 1024; ++i) {
 		*((udword*)0xc0001000 + i) = 2;
+		x86_invlpg(0xc0400000 + (i * 4096));
 	}
 }
 
