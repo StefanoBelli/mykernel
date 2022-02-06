@@ -20,8 +20,7 @@ page_tables_directory:
 	.int 0x100000 | 3		# 0
 	.fill 767, 4, 2
 	.int 0x101000 | 3		# 768 (0xc0..)
-	.int 0x100000 | 3		# 769 (0xc04..)
-	.fill 254, 4, 2
+	.fill 255, 4, 2
 
 head:
 	movl $0x102000, %eax
@@ -29,4 +28,5 @@ head:
 	movl %cr0, %eax
 	orl $0x80000000, %eax
 	movl %eax, %cr0
+	movl $0xc03fffff, %esp
 	jmp kmain

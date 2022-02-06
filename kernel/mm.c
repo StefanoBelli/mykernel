@@ -26,7 +26,7 @@ typedef struct {
 	udword addr : 20;
 } packed mm_page;
 
-static mm_pgtbl* pagedir = (mm_pgtbl*) 0xc0003000;
+static mm_pgtbl* pagedir = (mm_pgtbl*) 0xc0002000;
 
 void mm_init() {
 	*(udword*)pagedir = 2;
@@ -34,4 +34,6 @@ void mm_init() {
 	for(udword i = 0; i < 1024; ++i) {
 		x86_invlpg(i * 4096);
 	}
+
+	((udword*)pagedir)[769] = 0x100000 | 3;
 }
