@@ -34,7 +34,7 @@ void kmain() {
 	x86_pit_set_freq(1000);
 	isr_set_int_gates();
 	x86_sti(); //end init phase
-	
+
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	ksleep_init();
 
