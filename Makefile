@@ -3,6 +3,7 @@ LD = ld
 OBJCOPY = objcopy
 DD = dd
 QEMU = qemu-system-i386
+QEMUFLAGS = -fda $(MYKERNEL_IMG) -vga cirrus -d cpu_reset -d int -m 4G
 export CFLAGS = \
 	-O3 \
 	-march=i386 \
@@ -59,6 +60,9 @@ clean:
 	$(RM) $(MYKERNEL_ELF) $(MYKERNEL_BIN) $(MYKERNEL_IMG)
 
 run: all
-	$(QEMU) -fda $(MYKERNEL_IMG) -vga cirrus -d cpu_reset -d int
+	$(QEMU) $(QEMUFLAGS)
 
-.PHONY: all, clean, run
+rundbg: all
+	$(QEMU) $(QEMUFLAGS) -s -S
+
+.PHONY: all, clean, run, rundbg
