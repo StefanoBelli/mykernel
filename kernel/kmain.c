@@ -27,9 +27,6 @@ __mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 }
 
 void kmain() {
-/*	finalize_minimal_paging_setup();
-	extend_kernel_pages();
-	__asm__ __volatile__("movb $0xbe, 0xffd00000;");*/
 	pgsetup_finalize();
 	x86_idt_install();
 	x86_pic_remap();
