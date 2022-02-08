@@ -32,4 +32,6 @@ head:
 	orl $0x80000000, %eax
 	movl %eax, %cr0
 	movl $0xc03fffff, %esp
+	call pgsetup_extend_kernel_pages
+	movl $0xffbfffff, %esp
 	jmp kmain
