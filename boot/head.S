@@ -25,6 +25,24 @@ kernel_page_table:
 	new_filled_pt 0x100
 pt_page_table:
 	new_filled_pt 0xbfc00
+	
+va_gdt:
+	.quad 0
+	.word 0xffff
+	.word 0
+	.byte 0
+	.byte 0b10011010
+	.byte 0b11001111
+	.byte 0
+	.word 0xffff
+	.word 0
+	.byte 0
+	.byte 0b10010010
+	.byte 0b11001111
+	.byte 0
+va_gdt_desc:
+	.word va_gdt_desc - va_gdt - 1
+	.int 0xc0000000 + va_gdt - 0x100000
 
 head:
 	movl $0x100000, %eax
@@ -35,4 +53,5 @@ head:
 	movl $0xc03fffff, %esp
 	call pgsetup_extend_kernel_pages
 	movl $0xffbfffff, %esp
+	lgdtl 0xc0000000 + va_gdt_desc - 0x100000
 	jmp kmain

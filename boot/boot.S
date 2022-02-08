@@ -143,7 +143,7 @@ gdt:
 	.byte 0
 gdt_desc:
 	.word gdt_desc - gdt - 1
-	.long gdt
+	.int gdt
 
 .org 510
 .word 0xaa55
