@@ -1,4 +1,5 @@
 .extern kmain
+.extern pgsetup_extend_kernel_pages
 .globl head
 
 .macro new_filled_pt start
