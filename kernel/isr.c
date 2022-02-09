@@ -1,10 +1,9 @@
 #include <x86/idt.h>
 #include <x86/pic.h>
 #include <misc/string.h>
-#include "isr.h"
-#include "kprintf.h"
-#include "misc.h"
-#include "excps.h"
+#include <kernel/isr.h>
+#include <kernel/kprintf.h>
+#include <kernel/misc.h>
 
 #define ISR_START_EXCP 0
 #define ISR_START_IRQ 32
@@ -62,10 +61,7 @@ extern void isr45();
 extern void isr46();
 extern void isr47();
 
-static isrh_fp final_handlers[MAX_INTS] = {
-	[1] = excp_debug,
-	[3] = excp_breakpoint,
-};
+static isrh_fp final_handlers[MAX_INTS];
 
 static const entry_isr_handler_fp entry_handlers[N_ISR] = {
 	 isr0,  isr1,  isr2,  isr3,  isr4,  isr5,  isr6,  isr7,  isr8,  isr9, 
@@ -144,4 +140,8 @@ void isr_log_interrupt_frame(interrupt_frame f) {
 
 __mykapi void isr_register_irq_handler(irqn i, isrh_fp h) {
 	final_handlers[i + ISR_START_IRQ] = h;
+}
+
+__mykapi void isr_register_excp_handler(excpn i, isrh_fp h) {
+	final_handlers[i + ISR_START_EXCP] = h;
 }

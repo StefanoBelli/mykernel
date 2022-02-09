@@ -3,11 +3,10 @@
 #include <x86/pic.h>
 #include <x86/pit.h>
 #include <driver/kbd.h>
-#include "kvga.h"
-#include "kprintf.h"
-#include "ksleep.h"
-#include "isr.h"
-#include "misc.h"
+#include <kernel/kvga.h>
+#include <kernel/kprintf.h>
+#include <kernel/isr.h>
+#include <kernel/misc.h>
 
 extern __mykapi void pgsetup_finalize();
 

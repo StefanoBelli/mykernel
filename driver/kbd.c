@@ -1,6 +1,6 @@
 #include <kernel/isr.h>
 #include <x86/x86.h>
-#include "kbd.h"
+#include <driver/kbd.h>
 
 #define AD KBD_KEY_PAYLD_ARROW_DOWN //arrow down
 #define AR KBD_KEY_PAYLD_ARROW_RIGHT //arrow right

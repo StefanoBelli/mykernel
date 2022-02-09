@@ -23,6 +23,28 @@ typedef enum {
 	IRQ_SECONDARY_IDE_CH
 } irqn;
 
+typedef enum {
+	EXCP_DIVIDE_BY_ZERO,
+	EXCP_DEBUG,
+	EXCP_NMI,
+	EXCP_BREAKPOINT,
+	EXCP_OVERFLOW,
+	EXCP_BOUND_RANGE_EXCEEDED,
+	EXCP_INVALID_OPCODE,
+	EXCP_DEVICE_NOT_AVAILABLE,
+	EXCP_DOUBLE_FAULT,
+	EXCP_COPROCESSOR_SEGMENT_OVERRUN,
+	EXCP_INVALID_TSS,
+	EXCP_SEGMENT_NOT_PRESENT,
+	EXCP_STACK_SEGMENT_FAULT,
+	EXCP_GENERAL_PROTECTION_FAULT,
+	EXCP_PAGE_FAULT,
+	EXCP_X87_FLOATING_POINT,
+	EXCP_ALIGNMENT_CHECK,
+	EXCP_MACHINE_CHECK,
+	EXCP_RESERVED
+} excpn;
+
 typedef struct {
 	udword gs;
 	udword fs;
@@ -50,5 +72,7 @@ typedef void (*isrh_fp)(interrupt_frame);
 __mykapi void isr_set_int_gates();
 void isr_log_interrupt_frame(interrupt_frame);
 __mykapi void isr_register_irq_handler(irqn, isrh_fp);
+__mykapi void isr_register_excp_handler(excpn, isrh_fp);
+
 
 #endif

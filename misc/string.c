@@ -1,5 +1,5 @@
-#include "itoa.h"
-#include "string.h"
+#include <misc/itoa.h>
+#include <misc/string.h>
 
 __mykapi udword myk_strncpy(const byte* src, byte* dst, udword dstlen) {
 	const byte* startsrc = src;

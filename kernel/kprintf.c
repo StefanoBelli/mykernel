@@ -1,5 +1,5 @@
 #include <misc/string.h>
-#include "kprintf.h"
+#include <kernel/kprintf.h>
 
 typedef struct __buffer {
 	byte data[KPRINTF_BUFSIZE];

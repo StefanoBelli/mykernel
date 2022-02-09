@@ -1,5 +1,5 @@
-#include "x86.h"
-#include "pit.h"
+#include <x86/x86.h>
+#include <x86/pit.h>
 
 __mykapi void x86_pit_set_freq(udword fhz) {
 	udword d = 1193182 / fhz;

@@ -9,7 +9,7 @@ export CFLAGS = \
 	-march=i386 \
 	-mtune=i386 \
 	-mgeneral-regs-only \
-	-I.. \
+	-I$(shell pwd)/include \
 	-m32 \
 	-nostdinc \
 	-nostdlib \

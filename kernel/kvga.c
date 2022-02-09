@@ -1,4 +1,4 @@
-#include "kvga.h"
+#include <kernel/kvga.h>
 #include <driver/vga.h>
 
 static uword ix;

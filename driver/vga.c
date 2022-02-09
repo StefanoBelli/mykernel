@@ -1,5 +1,5 @@
 #include <x86/x86.h>
-#include "vga.h"
+#include <driver/vga.h>
 
 #define framebuf(x, y) *((word*)(0xffcb8000 + ((y * VGA_WIDTH + x) << 1)))
 

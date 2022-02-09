@@ -1,7 +1,7 @@
 #include <misc/gcc.h>
 #include <misc/string.h>
-#include "x86.h"
-#include "idt.h"
+#include <x86/x86.h>
+#include <x86/idt.h>
 
 typedef struct {
 	uword offset_low;
