@@ -10,7 +10,7 @@ SECTIONS {
 		boot/head.o (.text)
 	}
 
-	kernel.text /*virt=*/ 0xc000404c : AT (0x424c) {
+	kernel.text /*virt=*/ 0xc0004042 : AT (0x4242) {
 		boot/pgsetup.o (.text)
 		kernel/kmain.o (.text)
 		kernel/kvga.o (.text)

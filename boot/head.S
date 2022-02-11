@@ -1,5 +1,4 @@
 .extern kmain
-.extern pgsetup_extend_kernel_pages
 .globl head
 
 .macro new_filled_pt start
@@ -51,7 +50,5 @@ head:
 	orl $0x80000000, %eax
 	movl %eax, %cr0
 	movl $0xc03fffff, %esp
-	call pgsetup_extend_kernel_pages
-	movl $0xc07fffff, %esp
 	lgdtl 0xc0000000 + va_gdt_desc - 0x100000
 	jmp kmain
