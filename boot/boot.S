@@ -19,18 +19,16 @@ pushw %dx
 movw $s_boot_start, %si
 call bios_printzln
 
-popw %dx
-
 call test_a20
 testb %al, %al
-jnz load_kernel
+jnz mmap
 
 movw $0x2401, %ax
 int $0x15
 
 call test_a20
 testb %al, %al
-jnz load_kernel
+jnz mmap
 
 inb $0x92, %al
 orb $2, %al
@@ -38,19 +36,32 @@ outb %al, $0x92
 
 call test_a20
 testb %al, %al
-jnz load_kernel
+jnz mmap
 
 inb $0xee, %al
 
 call test_a20
 testb %al, %al
-jnz load_kernel
+jnz mmap
 
 movw $s_a20_givenup, %si
 call bios_printzln
 jmp cpu_halt
 
+mmap:
+call query_memory_map
+
+testw %ax, %ax
+jnz load_kernel
+
+movw $s_mmap_failure, %si
+call bios_printzln
+jmp cpu_halt
+
 load_kernel:
+movw %ax, 0x7e00
+
+popw %dx
 movw $0x230, %ax
 movw $2, %cx
 xorb %dh, %dh
@@ -123,10 +134,36 @@ test_a20:
 	sete %al
 	ret
 
+query_memory_map:
+	xorw %bp, %bp
+	xorw %ax, %ax
+	movw %ax, %es
+	movw $0x7e04, %di
+	xorl %ebx, %ebx
+__query_memory_map_loop:
+	movl $24, %ecx
+	movl $0x534d4150, %edx
+	movl $0xe820, %eax
+	int $0x15
+	jc __query_memory_map_failure
+	cmpl $0x534d4150, %eax
+	jne __query_memory_map_failure
+	addw $1, %bp
+	addw $24, %di
+	testl %ebx, %ebx
+	jnz __query_memory_map_loop
+	xchgw %bp, %ax
+	jmp __query_memory_map_end
+__query_memory_map_failure:
+	xorw %ax, %ax
+__query_memory_map_end:
+	ret
+
 s_boot_start: .asciz "boot: starting up..."
 s_cpu_halt: .asciz "cpu: halt"
 s_a20_givenup: .asciz "a20: unable to activate, given up"
 s_read_boot_disk_failure: .asciz "disk: boot disk read failure"
+s_mmap_failure: .asciz "mem: unable to query system memory map"
 gdt:
 	.quad 0
 	.word 0xffff

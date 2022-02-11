@@ -7,6 +7,16 @@
 #include <kernel/kprintf.h>
 #include <kernel/isr.h>
 #include <kernel/misc.h>
+#include <misc/gcc.h>
+
+typedef struct {
+	udword base_low;
+	udword base_high;
+	udword length_low;
+	udword length_high;
+	udword type;
+	udword reserved; // ACPI things
+} packed memory_map_entry;
 
 extern __mykapi void pgsetup_finalize();
 
@@ -23,6 +33,15 @@ __mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 			len, 
 			kvga_scroll
 			);
+}
+
+__mykapi void log_memory_map() {
+	udword n_ents = *(udword*) 0xffc07e00;
+	memory_map_entry* map = (memory_map_entry*) 0xffc07e04;
+
+	for(udword i = 0; i < n_ents; ++i) {
+		kprintf("base = %p, length = %p, type = %d\n", map[i].base_low, map[i].length_low, map[i].type);
+	}
 }
 
 void kmain() {
@@ -46,6 +65,7 @@ void kmain() {
 
 	x86_pic_clear_mask(1);
 	kprintf("kernel basic initialization done\n");
+	log_memory_map();
 fail_halt:
 	system_halt();
 }

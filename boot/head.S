@@ -15,15 +15,12 @@ page_tables_directory:
 	.int 0x101000 | 3
 	.fill 767, 4, 2
 	.int 0x102000 | 3
-	.fill 253, 4, 2
-	.int 0x103000 | 3
+	.fill 254, 4, 2
 	.int 0x101000 | 3
 bootstrap_page_table:
 	new_filled_pt 0
 kernel_page_table:
 	new_filled_pt 0x100
-pt_page_table:
-	new_filled_pt 0xbfc00
 	
 va_gdt:
 	.quad 0
