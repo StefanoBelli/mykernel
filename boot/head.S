@@ -44,7 +44,7 @@ va_gdt_desc:
 	.int 0xc0000000 + va_gdt - 0x100000
 
 head:
-	movl $0x100000, %eax
+	movl $page_tables_directory, %eax
 	movl %eax, %cr3
 	movl %cr0, %eax
 	orl $0x80000000, %eax
