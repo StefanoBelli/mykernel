@@ -40,7 +40,10 @@ __mykapi void log_memory_map() {
 	memory_map_entry* map = (memory_map_entry*) 0xffc07e04;
 
 	for(udword i = 0; i < n_ents; ++i) {
-		kprintf("base = %p, length = %p, type = %d\n", map[i].base_low, map[i].length_low, map[i].type);
+		kprintf("from %p to %p is %s\n", 
+				map[i].base_low, 
+				map[i].length_low + map[i].base_low - 1, 
+				map[i].type == 1 ? "usable" : "reserved" );
 	}
 }
 
@@ -65,6 +68,7 @@ void kmain() {
 
 	x86_pic_clear_mask(1);
 	kprintf("kernel basic initialization done\n");
+	kprintf("BIOS-E820 provided memory map (rhs range next byte incl):\n");
 	log_memory_map();
 fail_halt:
 	system_halt();
