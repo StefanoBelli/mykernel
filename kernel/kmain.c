@@ -80,16 +80,17 @@ static __mykapi udword setup_pages_for_ptstore() {
 	return avail_phys_mem_max <= avail_phys_mem_min;
 }
 
-static __mykapi void kern_init_failure() {
+static __mykapi noinline void kern_init_failure() {
 	kprintf("kernel: fatal error, unable to initialize!\n");
 	while(1) {}
 }
 
-#define kern_log_avail_mem() { \
-	kprintf("kernel: total available memory - %u bytes\n" \
-			"kernel: total available memory - from %p to %p\n", \
-			avail_phys_mem_max - avail_phys_mem_min + 1, \
-			avail_phys_mem_min, avail_phys_mem_max); \
+
+static __mykapi noinline void kern_log_avail_mem() {
+	kprintf("kernel: total available memory - %u bytes\n"
+			"kernel: total available memory - from %p to %p\n",
+			avail_phys_mem_max - avail_phys_mem_min + 1, 
+			avail_phys_mem_min, avail_phys_mem_max);
 }
 
 void kmain() {
@@ -132,7 +133,7 @@ void kmain() {
 
 	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
-		kprintf("kbd init failed (%d)\n", kbd_init_fail);
+		kprintf("kbd: init failed (%d)\n", kbd_init_fail);
 		kern_init_failure();
 	}
 
