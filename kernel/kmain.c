@@ -9,7 +9,7 @@
 #include <kernel/misc.h>
 #include <misc/gcc.h>
 
-#define MIN_MEM_AVAIL 0x100000
+#define MIN_PHYS_MEM_AVAIL 0x100000
 
 typedef struct {
 	udword base_low;
@@ -20,8 +20,8 @@ typedef struct {
 	udword reserved; // ACPI things
 } packed memory_map_entry;
 
-static udword avail_mem_min;
-static udword avail_mem_max;
+static udword avail_phys_mem_min;
+static udword avail_phys_mem_max;
 
 static udword pt_ptstore[1024] aligned(4096);
 
@@ -53,10 +53,10 @@ __mykapi void log_memory_map() {
 		udword max_mem = map[i].length_low + map[i].base_low - 1;
 		if(map[i].type == 1) {
 			typestr = "usable";
-			if(map[i].base_low <= MIN_MEM_AVAIL
-					&& max_mem > avail_mem_max) {
-				avail_mem_min = MIN_MEM_AVAIL;
-				avail_mem_max = max_mem;
+			if(map[i].base_low <= MIN_PHYS_MEM_AVAIL
+					&& max_mem > avail_phys_mem_max) {
+				avail_phys_mem_min = MIN_PHYS_MEM_AVAIL;
+				avail_phys_mem_max = max_mem;
 			}
 		}
 
@@ -67,13 +67,15 @@ __mykapi void log_memory_map() {
 
 __mykapi void setup_pages_for_ptstore() {
 	udword* pdt = (udword*) 0xc0000000;
-	udword _pt_start = (avail_mem_max - 0x400000 - 1023) >> 12;
+	udword _pt_start = 1 + ((avail_phys_mem_max - 0x400000 - 1023) >> 12);
 
-	pdt[1022] = 0xc0000000 - (udword) pt_ptstore;
+	pdt[1022] = ((udword) pt_ptstore - 0xc0000000 + 0x100000) | 3;
 
 	for(udword i = 0; i < 1024; ++i) {
 		pt_ptstore[i] = (_pt_start + i) * 0x1000 | 3;
 	}
+
+	avail_phys_mem_max -= 0x400000;
 }
 
 void kmain() {
@@ -89,6 +91,24 @@ void kmain() {
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	ksleep_init();
 
+	kprintf("kernel: first init phase done\n"
+			"bios-e820: provides the following "
+			"memory map (rhs range next byte incl):\n");
+	
+	log_memory_map();
+	if(avail_phys_mem_min != MIN_PHYS_MEM_AVAIL) {
+		kprintf("kernel: seeking available memory failed\n");
+		goto fail_halt;
+	}
+	
+	setup_pages_for_ptstore();
+
+	kprintf("kernel: secondary init phase done\n"
+			"kernel: total available memory - %u bytes\n"
+			"kernel: total available memory - from %p to %p\n", 
+			avail_phys_mem_max - avail_phys_mem_min + 1, 
+			avail_phys_mem_min, avail_phys_mem_max);
+
 	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
 		kprintf("kbd init failed (%d)\n", kbd_init_fail);
@@ -97,21 +117,6 @@ void kmain() {
 
 	x86_pic_clear_mask(1);
 	
-	kprintf("kernel basic initialization done\n");
-	kprintf("BIOS-E820 provided memory map (rhs"
-			" range next byte incl):\n");
-	
-	log_memory_map();
-	if(avail_mem_min != MIN_MEM_AVAIL) {
-		kprintf("seeking available memory failed\n");
-		goto fail_halt;
-	}
-
-	kprintf("total memory available: %u bytes\n"
-			"total memory available: from %p to %p\n", 
-			avail_mem_max - avail_mem_min + 1, avail_mem_min, avail_mem_max);
-
-	setup_pages_for_ptstore();
 fail_halt:
 	system_halt();
 }
