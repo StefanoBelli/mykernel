@@ -42,7 +42,7 @@ __mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 			);
 }
 
-__mykapi void log_memory_map() {
+__mykapi void seek_available_memory_from_map() {
 	udword n_ents = *(udword*) 0xffc07e00;
 	memory_map_entry* map = (memory_map_entry*) 0xffc07e04;
 
@@ -78,6 +78,13 @@ __mykapi void setup_pages_for_ptstore() {
 	avail_phys_mem_max -= 0x400000;
 }
 
+#define kern_log_avail_mem() { \
+	kprintf("kernel: total available memory - %u bytes\n" \
+			"kernel: total available memory - from %p to %p\n", \
+			avail_phys_mem_max - avail_phys_mem_min + 1, \
+			avail_phys_mem_min, avail_phys_mem_max); \
+}
+
 void kmain() {
 	pgsetup_finalize();
 	x86_idt_install();
@@ -95,19 +102,18 @@ void kmain() {
 			"bios-e820: provides the following "
 			"memory map (rhs range next byte incl):\n");
 	
-	log_memory_map();
+	seek_available_memory_from_map();
 	if(avail_phys_mem_min != MIN_PHYS_MEM_AVAIL) {
 		kprintf("kernel: seeking available memory failed\n");
 		goto fail_halt;
 	}
-	
+
+	kern_log_avail_mem();
+
 	setup_pages_for_ptstore();
 
-	kprintf("kernel: secondary init phase done\n"
-			"kernel: total available memory - %u bytes\n"
-			"kernel: total available memory - from %p to %p\n", 
-			avail_phys_mem_max - avail_phys_mem_min + 1, 
-			avail_phys_mem_min, avail_phys_mem_max);
+	kprintf("kernel: secondary init phase done\n");
+	kern_log_avail_mem();
 
 	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
@@ -116,7 +122,10 @@ void kmain() {
 	}
 
 	x86_pic_clear_mask(1);
-	
+
+	kprintf("kernel: final init phase done\n");
+	kern_log_avail_mem();
+
 fail_halt:
 	system_halt();
 }

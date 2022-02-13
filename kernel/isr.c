@@ -106,7 +106,7 @@ void dont_optimize omit_frame_pointer isr_handler(interrupt_frame frame) {
 	} else {
 		kprintf("unhandled int, register status follows:\n");
 		isr_log_interrupt_frame(frame);
-		system_halt();
+		while(1) {}
 	}
 
 	if(frame.intno >= ISR_START_IRQ && frame.intno < N_ISR) {
