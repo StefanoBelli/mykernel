@@ -20,9 +20,10 @@ typedef struct {
 	udword reserved; // ACPI things
 } packed memory_map_entry;
 
-udword avail_phys_mem_min;
-udword avail_phys_mem_max;
+static udword avail_phys_mem_min;
+static udword avail_phys_mem_max;
 
+//TODO physical address value of pt_ptstore
 udword pt_ptstore[1024] aligned(4096);
 
 extern __mykapi void pgsetup_finalize();
@@ -85,7 +86,7 @@ static __mykapi noinline void kern_init_failure() {
 	while(1) {}
 }
 
-
+//TODO put this directly into kmain
 static __mykapi noinline void kern_log_avail_mem() {
 	kprintf("kernel: total available memory - %u bytes\n"
 			"kernel: total available memory - from %p to %p\n",
@@ -126,10 +127,10 @@ void kmain() {
 		kern_init_failure();
 	}
 
-	kprintf("kernel: secondary init phase done\n");
-	kern_log_avail_mem();
+	// TODO init frame allocator
 
-	//init frame allocator
+	kprintf("kernel: secondary init phase done\n");
+	kern_log_avail_mem(); // TODO obsolete at this point
 
 	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
@@ -140,7 +141,7 @@ void kmain() {
 	x86_pic_clear_mask(1);
 
 	kprintf("kernel: final init phase done\n");
-	kern_log_avail_mem();
+	kern_log_avail_mem(); // TODO obsolete at this point
 
 	system_halt();
 }
