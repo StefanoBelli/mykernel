@@ -27,12 +27,12 @@ udword pt_ptstore[1024] aligned(4096);
 
 extern __mykapi void pgsetup_finalize();
 
-__mykapi void kvga_kprintf_init() {
+static __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();
 	kvga_cursor(0, 0);
 }
 
-__mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
+static __mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 	kvga_write(
 			buf, 
 			VGA_TEXT_COLOR_BLACK, 
@@ -42,7 +42,7 @@ __mykapi void kvga_kprintf_printer(const byte* buf, udword len) {
 			);
 }
 
-__mykapi void seek_available_memory_from_map() {
+static __mykapi void seek_available_memory_from_map() {
 	udword n_ents = *(udword*) 0xffc07e00;
 	memory_map_entry* map = (memory_map_entry*) 0xffc07e04;
 
@@ -65,7 +65,7 @@ __mykapi void seek_available_memory_from_map() {
 	}
 }
 
-__mykapi udword setup_pages_for_ptstore() {
+static __mykapi udword setup_pages_for_ptstore() {
 	udword* pdt = (udword*) 0xc0000000;
 	udword _pt_start = 1 + ((avail_phys_mem_max - 0x400000 - 1023) >> 12);
 
@@ -78,6 +78,11 @@ __mykapi udword setup_pages_for_ptstore() {
 	avail_phys_mem_max -= 0x400000;
 	
 	return avail_phys_mem_max <= avail_phys_mem_min;
+}
+
+static __mykapi void kern_init_failure() {
+	kprintf("kernel: fatal error, unable to initialize!\n");
+	while(1) {}
 }
 
 #define kern_log_avail_mem() { \
@@ -107,7 +112,7 @@ void kmain() {
 	seek_available_memory_from_map();
 	if(avail_phys_mem_min != MIN_PHYS_MEM_AVAIL) {
 		kprintf("kernel: seeking available memory failed\n");
-		goto kernel_init_failure;
+		kern_init_failure();
 	}
 
 	avail_phys_mem_min += 0x400000;
@@ -117,7 +122,7 @@ void kmain() {
 	udword pg_setup_ptstore_fail = setup_pages_for_ptstore();
 	if (pg_setup_ptstore_fail != 0) {
 		kprintf("kernel: not enough memory\n");
-		goto kernel_init_failure;
+		kern_init_failure();
 	}
 
 	kprintf("kernel: secondary init phase done\n");
@@ -128,7 +133,7 @@ void kmain() {
 	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
 		kprintf("kbd init failed (%d)\n", kbd_init_fail);
-		goto kernel_init_failure;
+		kern_init_failure();
 	}
 
 	x86_pic_clear_mask(1);
@@ -137,8 +142,4 @@ void kmain() {
 	kern_log_avail_mem();
 
 	system_halt();
-
-kernel_init_failure:
-	kprintf("kernel: fatal error, unable to initialize!\n");
-	while(1) {}
 }
