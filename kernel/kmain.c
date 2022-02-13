@@ -20,10 +20,10 @@ typedef struct {
 	udword reserved; // ACPI things
 } packed memory_map_entry;
 
-static udword avail_phys_mem_min;
-static udword avail_phys_mem_max;
+udword avail_phys_mem_min;
+udword avail_phys_mem_max;
 
-static udword pt_ptstore[1024] aligned(4096);
+udword pt_ptstore[1024] aligned(4096);
 
 extern __mykapi void pgsetup_finalize();
 
@@ -65,7 +65,7 @@ __mykapi void seek_available_memory_from_map() {
 	}
 }
 
-__mykapi void setup_pages_for_ptstore() {
+__mykapi udword setup_pages_for_ptstore() {
 	udword* pdt = (udword*) 0xc0000000;
 	udword _pt_start = 1 + ((avail_phys_mem_max - 0x400000 - 1023) >> 12);
 
@@ -76,6 +76,8 @@ __mykapi void setup_pages_for_ptstore() {
 	}
 
 	avail_phys_mem_max -= 0x400000;
+	
+	return avail_phys_mem_max <= avail_phys_mem_min;
 }
 
 #define kern_log_avail_mem() { \
@@ -105,20 +107,28 @@ void kmain() {
 	seek_available_memory_from_map();
 	if(avail_phys_mem_min != MIN_PHYS_MEM_AVAIL) {
 		kprintf("kernel: seeking available memory failed\n");
-		goto fail_halt;
+		goto kernel_init_failure;
 	}
+
+	avail_phys_mem_min += 0x400000;
 
 	kern_log_avail_mem();
 
-	setup_pages_for_ptstore();
+	udword pg_setup_ptstore_fail = setup_pages_for_ptstore();
+	if (pg_setup_ptstore_fail != 0) {
+		kprintf("kernel: not enough memory\n");
+		goto kernel_init_failure;
+	}
 
 	kprintf("kernel: secondary init phase done\n");
 	kern_log_avail_mem();
 
+	//init frame allocator
+
 	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
 		kprintf("kbd init failed (%d)\n", kbd_init_fail);
-		goto fail_halt;
+		goto kernel_init_failure;
 	}
 
 	x86_pic_clear_mask(1);
@@ -126,6 +136,9 @@ void kmain() {
 	kprintf("kernel: final init phase done\n");
 	kern_log_avail_mem();
 
-fail_halt:
 	system_halt();
+
+kernel_init_failure:
+	kprintf("kernel: fatal error, unable to initialize!\n");
+	while(1) {}
 }
