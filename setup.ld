@@ -18,6 +18,7 @@ SECTIONS {
 		kernel/isr.o (.text)
 		kernel/isr_stub.o (.text)
 		kernel/misc.o (.text)
+		mm/fralloc.o (.text)
 		driver/vga.o (.text)
 		driver/kbd.o (.text)
 		x86/x86.o (.text)
