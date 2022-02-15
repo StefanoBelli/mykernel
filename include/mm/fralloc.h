@@ -4,6 +4,13 @@
 #include <misc/types.h>
 #include <misc/gcc.h>
 
+#define FRALLOC_INIT_LOW_ALIGNMENT 1
+#define FRALLOC_INIT_HIGH_LAST_BYTE 2
+#define FRALLOC_INIT_ILLEGAL_ARGS 3
+#define FRALLOC_INIT_TOO_MUCH_PAGES 4
+#define FRALLOC_INIT_NOT_ENOUGH_MEMORY 5
+#define FRALLOC_INIT_OK 0
+
 typedef struct {
 	struct {
 		struct {
