@@ -1,4 +1,7 @@
+#include <kernel/kprintf.h>
 #include <mm/fralloc.h>
+
+extern udword first_pt_phys;
 
 static byte* frbitm;
 static mm_fralloc_stats stats;
@@ -8,16 +11,17 @@ static __mykapi void* __init_bitmap_pagetable(
 	udword* pdt = (udword*) 0xc0000000;
 	udword* pt = (udword*) 0xff800000;
 
-	pdt[1021] = 3 /* | pagetable phys, set ext symbol in kmain, system dependent */;
+	pdt[1021] = 3  | first_pt_phys;
 	
 	udword _target = aligned_higher_addr >> 12;
 	udword i = 1023;
+	udword limit = 1023 - pages + 1;
 
-	for(; i >= pages; --i) {
+	for(; i >= limit; --i) {
 		pt[i] = 3 | (4096 * (_target + i));
 	}
 
-	return (void*) (0xff400000 | (udword) (pages << 12));
+	return (void*) (0xff400000 | ((i + 1) << 12));
 }
 
 __mykapi mm_fralloc_stats mm_fralloc_get_stats() {
@@ -53,8 +57,11 @@ __mykapi udword mm_fralloc_init(udword low_phys_addr, udword high_phys_addr) {
 		return FRALLOC_INIT_NOT_ENOUGH_MEMORY;
 	}
 
+	kprintf("total_frames = %u ;; diff = %u\n", total_frames, high_phys_addr - low_phys_addr);
+
 	void* virtaddr = 
 		__init_bitmap_pagetable(pages_to_bitmap, high_phys_addr_aligned);
+
 	//INIT_STATS();
 	//__init_frame_bitmap();
 	

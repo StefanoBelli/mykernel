@@ -8,6 +8,7 @@
 #include <kernel/isr.h>
 #include <kernel/misc.h>
 #include <misc/gcc.h>
+#include <mm/fralloc.h>
 
 #define MIN_PHYS_MEM_AVAIL 0x100000
 
@@ -24,6 +25,7 @@ static udword avail_phys_mem_min;
 static udword avail_phys_mem_max;
 
 //TODO physical address value of pt_ptstore
+udword first_pt_phys;
 udword pt_ptstore[1024] aligned(4096);
 
 extern __mykapi void pgsetup_finalize();
@@ -69,6 +71,8 @@ static __mykapi void seek_available_memory_from_map() {
 static __mykapi udword setup_pages_for_ptstore() {
 	udword* pdt = (udword*) 0xc0000000;
 	udword _pt_start = 1 + ((avail_phys_mem_max - 0x400000 - 1023) >> 12);
+	
+	first_pt_phys = _pt_start * 0x1000;
 
 	pdt[1022] = ((udword) pt_ptstore - 0xc0000000 + 0x100000) | 3;
 
@@ -127,10 +131,12 @@ void kmain() {
 		kern_init_failure();
 	}
 
-	// TODO init frame allocator
+	if(mm_fralloc_init(avail_phys_mem_min, avail_phys_mem_max) != 0) {
+		kprintf("kernel: not enough memory\n");
+		kern_init_failure();
+	}
 
 	kprintf("kernel: secondary init phase done\n");
-	kern_log_avail_mem(); // TODO obsolete at this point
 
 	dword kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
@@ -141,7 +147,6 @@ void kmain() {
 	x86_pic_clear_mask(1);
 
 	kprintf("kernel: final init phase done\n");
-	kern_log_avail_mem(); // TODO obsolete at this point
 
 	system_halt();
 }
