@@ -40,6 +40,7 @@ typedef struct {
 
 __mykapi mm_fralloc_stats mm_fralloc_get_stats();
 __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats*);
+__mykapi void mm_fralloc_log_init_err(udword);
 __mykapi udword mm_fralloc_init(udword, udword);
 __mykapi udword mm_fralloc_reserve();
 __mykapi udword mm_fralloc_release(udword);

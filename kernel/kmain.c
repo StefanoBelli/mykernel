@@ -24,7 +24,6 @@ typedef struct {
 static udword avail_phys_mem_min;
 static udword avail_phys_mem_max;
 
-//TODO physical address value of pt_ptstore
 udword first_pt_phys;
 udword pt_ptstore[1024] aligned(4096);
 
@@ -49,7 +48,7 @@ static __mykapi void seek_available_memory_from_map() {
 	udword n_ents = *(udword*) 0xffc07e00;
 	memory_map_entry* map = (memory_map_entry*) 0xffc07e04;
 
-	kprintf("memory map: got %u total entries\n", n_ents);
+	kprintf("memmap: got %u total entries\n", n_ents);
 
 	for(udword i = 0; i < n_ents; ++i) {
 		char* typestr = "reserved";
@@ -63,7 +62,7 @@ static __mykapi void seek_available_memory_from_map() {
 			}
 		}
 
-		kprintf("memory map: from %p to %p is %s\n", map[i].base_low, 
+		kprintf("memmap: from %p to %p is %s\n", map[i].base_low, 
 				max_mem, typestr);
 	}
 }
@@ -88,14 +87,6 @@ static __mykapi udword setup_pages_for_ptstore() {
 static __mykapi noinline void kern_init_failure() {
 	kprintf("kernel: fatal error, unable to initialize!\n");
 	while(1) {}
-}
-
-//TODO put this directly into kmain
-static __mykapi noinline void kern_log_avail_mem() {
-	kprintf("kernel: total available memory - %u bytes\n"
-			"kernel: total available memory - from %p to %p\n",
-			avail_phys_mem_max - avail_phys_mem_min + 1, 
-			avail_phys_mem_min, avail_phys_mem_max);
 }
 
 void kmain() {
@@ -123,18 +114,28 @@ void kmain() {
 
 	avail_phys_mem_min += 0x400000;
 
-	kern_log_avail_mem();
-
 	udword pg_setup_ptstore_fail = setup_pages_for_ptstore();
 	if (pg_setup_ptstore_fail != 0) {
 		kprintf("kernel: not enough memory\n");
 		kern_init_failure();
 	}
 
-	if(mm_fralloc_init(avail_phys_mem_min, avail_phys_mem_max) != 0) {
-		kprintf("kernel: not enough memory\n");
+	kprintf("kernel: after ptstore initialization\n"
+			"kernel: total available memory - %u bytes\n"
+			"kernel: total available memory - from %p to %p\n",
+			avail_phys_mem_max - avail_phys_mem_min + 1, 
+			avail_phys_mem_min, avail_phys_mem_max);
+
+	udword fralloc_init_fail = mm_fralloc_init(avail_phys_mem_min, avail_phys_mem_max);
+	if(fralloc_init_fail != 0) {
+		mm_fralloc_log_init_err(fralloc_init_fail);
 		kern_init_failure();
 	}
+
+	kprintf("kernel: fralloc has complete control over physical memory\n");
+	
+	mm_fralloc_stats fralloc_stats = mm_fralloc_get_stats();
+	mm_fralloc_log_stats(&fralloc_stats);
 
 	kprintf("kernel: secondary init phase done\n");
 
