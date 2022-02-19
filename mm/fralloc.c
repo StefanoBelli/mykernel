@@ -73,8 +73,8 @@ __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
 }
 
 __mykapi uint32_t mm_fralloc_init() {
-    uint32_t low_phys_addr = __mm_memmap_get_avail_phys_mem_min();
-    uint32_t high_phys_addr = __mm_memmap_get_avail_phys_mem_max();
+	uint32_t low_phys_addr = __mm_memmap_get_avail_phys_mem_min();
+	uint32_t high_phys_addr = __mm_memmap_get_avail_phys_mem_max();
 
 	if((low_phys_addr & 0xfff) != 0) {
 		return FRALLOC_INIT_LOW_ALIGNMENT;
