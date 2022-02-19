@@ -2,7 +2,7 @@
 #define MYKERNEL_KBD_DRIVER_H
 
 #include <misc/gcc.h>
-#include <misc/types.h>
+#include "types.h"
 
 #define KBD_KEY_PAYLD_ARROW_DOWN 25 //arrow down
 #define KBD_KEY_PAYLD_ARROW_RIGHT 24 //arrow right
@@ -92,11 +92,11 @@ typedef enum {
 #define kbd_key_get_type(k) ((k & 0x700) >> 8)
 #define kbd_key_get_payld(k) (k & 0xff)
 
-typedef word kbd_key;
-typedef ubyte kbd_key_payld_ch;
+typedef int16_t kbd_key;
+typedef uint8_t kbd_key_payld_ch;
 typedef void (*__mykapi kbd_evt_fp)(kbd_key);
 
-__mykapi dword kbd_init();
+__mykapi int32_t kbd_init();
 __mykapi void kbd_set_handler(kbd_evt_fp);
 
 #endif

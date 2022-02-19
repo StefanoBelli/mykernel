@@ -3,14 +3,14 @@
 #include <kernel/misc.h>
 #include <kernel/isr.h>
 
-static udword pit_ticks;
+static uint32_t pit_ticks;
 
 static void __ksleep_tick(unused interrupt_frame f) {
 	++pit_ticks;
 }
 
-__mykapi void dont_optimize omit_frame_pointer ksleep(udword ms) {
-	udword start_pit_tick = pit_ticks;
+__mykapi void dont_optimize omit_frame_pointer ksleep(uint32_t ms) {
+	uint32_t start_pit_tick = pit_ticks;
 	while(pit_ticks - start_pit_tick < ms) {}
 }
 

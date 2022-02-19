@@ -4,9 +4,9 @@
 #include "types.h"
 #include "gcc.h"
 
-__mykapi udword myk_strncpy(const byte* src, byte* dst, udword dstlen);
-__mykapi udword myk_vsnprintf(byte* buf, udword bufsiz, const byte* fmt, void* args);
-__mykapi byte* myk_str_tok(byte* buf, byte tok);
-__mykapi void* myk_memset(void* b, dword c, udword n);
+__mykapi uint32_t myk_strncpy(const int8_t* src, int8_t* dst, uint32_t dstlen);
+__mykapi uint32_t myk_vsnprintf(int8_t* buf, uint32_t bufsiz, const int8_t* fmt, void* args);
+__mykapi int8_t* myk_str_tok(int8_t* buf, int8_t tok);
+__mykapi void* myk_memset(void* b, int32_t c, uint32_t n);
 
 #endif

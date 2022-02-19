@@ -4,9 +4,9 @@
 #include "types.h"
 #include "gcc.h"
 
-__mykapi byte* ltoa(dword value, byte* buf);
-__mykapi byte* ultoa(udword value, byte* buf, ubyte base);
-__mykapi byte* ustoa(uword value, byte* buf, ubyte base);
-__mykapi byte* ubtoa(ubyte value, byte* buf, ubyte base);
+__mykapi int8_t* ltoa(int32_t value, int8_t* buf);
+__mykapi int8_t* ultoa(uint32_t value, int8_t* buf, uint8_t base);
+__mykapi int8_t* ustoa(uint16_t value, int8_t* buf, uint8_t base);
+__mykapi int8_t* ubtoa(uint8_t value, int8_t* buf, uint8_t base);
 
 #endif

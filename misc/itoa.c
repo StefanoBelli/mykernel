@@ -1,15 +1,15 @@
 #include <misc/itoa.h>
 
-__mykapi byte* ltoa(dword value, byte* buf) {
-	dword numlen = 0;
-	dword sign = 0;
+__mykapi int8_t* ltoa(int32_t value, int8_t* buf) {
+	int32_t numlen = 0;
+	int32_t sign = 0;
 
 	if(value < 0) {
 		sign = 1;
 		value = -value;
 	}
 
-	dword oldvalue = value;
+	int32_t oldvalue = value;
 
 	do {
 		++numlen;
@@ -17,9 +17,9 @@ __mykapi byte* ltoa(dword value, byte* buf) {
 
 	buf[numlen + sign] = 0;
 
-	dword i;
+	int32_t i;
 	for (i = numlen - 1 + sign; i >= sign; --i) {
-		buf[i] = (byte) (oldvalue % 10) + 48;
+		buf[i] = (int8_t) (oldvalue % 10) + 48;
 		oldvalue /= 10;
 	}
 
@@ -31,9 +31,9 @@ __mykapi byte* ltoa(dword value, byte* buf) {
 }
 
 /* unsigned */
-__mykapi byte* ultoa(udword value, byte* buf, ubyte base) {
-	dword numlen = 0;
-	udword oldvalue = value;
+__mykapi int8_t* ultoa(uint32_t value, int8_t* buf, uint8_t base) {
+	int32_t numlen = 0;
+	uint32_t oldvalue = value;
 
 	do {
 		++numlen;
@@ -41,18 +41,18 @@ __mykapi byte* ultoa(udword value, byte* buf, ubyte base) {
 
 	buf[numlen] = 0;
 
-	for (dword i = numlen - 1; i >= 0; --i) {
-		udword rem = oldvalue % base;
-		buf[i] = (byte) (rem > 9 ? rem + 87 : rem + 48);
+	for (int32_t i = numlen - 1; i >= 0; --i) {
+		uint32_t rem = oldvalue % base;
+		buf[i] = (int8_t) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 
 	return buf;
 }
 
-__mykapi byte* ustoa(uword value, byte* buf, ubyte base) {
-	dword numlen = 0;
-	uword oldvalue = value;
+__mykapi int8_t* ustoa(uint16_t value, int8_t* buf, uint8_t base) {
+	int32_t numlen = 0;
+	uint16_t oldvalue = value;
 
 	do {
 		++numlen;
@@ -60,18 +60,18 @@ __mykapi byte* ustoa(uword value, byte* buf, ubyte base) {
 
 	buf[numlen] = 0;
 
-	for (dword i = numlen - 1; i >= 0; --i) {
-		udword rem = oldvalue % base;
-		buf[i] = (byte) (rem > 9 ? rem + 87 : rem + 48);
+	for (int32_t i = numlen - 1; i >= 0; --i) {
+		uint32_t rem = oldvalue % base;
+		buf[i] = (int8_t) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 
 	return buf;
 }
 
-__mykapi byte* ubtoa(ubyte value, byte* buf, ubyte base) {
-	dword numlen = 0;
-	ubyte oldvalue = value;
+__mykapi int8_t* ubtoa(uint8_t value, int8_t* buf, uint8_t base) {
+	int32_t numlen = 0;
+	uint8_t oldvalue = value;
 
 	do {
 		++numlen;
@@ -79,9 +79,9 @@ __mykapi byte* ubtoa(ubyte value, byte* buf, ubyte base) {
 
 	buf[numlen] = 0;
 
-	for (dword i = numlen - 1; i >= 0; --i) {
-		udword rem = oldvalue % base;
-		buf[i] = (byte) (rem > 9 ? rem + 87 : rem + 48);
+	for (int32_t i = numlen - 1; i >= 0; --i) {
+		uint32_t rem = oldvalue % base;
+		buf[i] = (int8_t) (rem > 9 ? rem + 87 : rem + 48);
 		oldvalue /= base;
 	}
 

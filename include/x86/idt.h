@@ -10,6 +10,6 @@
 typedef void(*int_gate_fp)();
 
 __mykapi void x86_idt_install();
-__mykapi void x86_set_int_gate(ubyte m, ubyte i, int_gate_fp g);
+__mykapi void x86_set_int_gate(uint8_t m, uint8_t i, int_gate_fp g);
 
 #endif

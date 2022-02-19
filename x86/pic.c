@@ -38,7 +38,7 @@ __mykapi void x86_pic_remap() {
 	x86_outb(PIC2_DATA, ZERO_DATA_REG);
 }
 
-__mykapi void x86_pic_eoi(ubyte irq) {
+__mykapi void x86_pic_eoi(uint8_t irq) {
 	if(irq >= 8) {
 		x86_outb(PIC2_CTRL, EOI);
 	}
@@ -46,9 +46,9 @@ __mykapi void x86_pic_eoi(ubyte irq) {
 	x86_outb(PIC1_CTRL, EOI);
 }
 
-__mykapi void x86_pic_set_mask(ubyte irq) {
-	word port;
-	byte value;
+__mykapi void x86_pic_set_mask(uint8_t irq) {
+	int16_t port;
+	int8_t value;
 
 	if(irq < 8) {
 		port = PIC1_DATA;
@@ -57,13 +57,13 @@ __mykapi void x86_pic_set_mask(ubyte irq) {
 		irq -= 8;
 	}
 	
-	value = (byte) (x86_inb(port) | (1 << irq));
+	value = (int8_t) (x86_inb(port) | (1 << irq));
 	x86_outb(port, value);
 }
 
-__mykapi void x86_pic_clear_mask(ubyte irq) {
-	word port;
-	byte value;
+__mykapi void x86_pic_clear_mask(uint8_t irq) {
+	int16_t port;
+	int8_t value;
 
 	if(irq < 8) {
 		port = PIC1_DATA;
@@ -72,6 +72,6 @@ __mykapi void x86_pic_clear_mask(ubyte irq) {
 		irq -= 8;
 	}
 
-	value = (byte) (x86_inb(port) & ~(1 << irq));
+	value = (int8_t) (x86_inb(port) & ~(1 << irq));
 	x86_outb(port, value);
 }

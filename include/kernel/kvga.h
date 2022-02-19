@@ -1,7 +1,7 @@
 #ifndef KVGA_MYKERNEL_H
 #define KVGA_MYKERNEL_H
 
-#include <misc/types.h>
+#include "types.h"
 #include <misc/gcc.h>
 
 typedef enum {
@@ -25,11 +25,11 @@ typedef enum {
 
 __mykapi void kvga_set_start_pos();
 __mykapi void kvga_write(
-		const byte* data, byte bg, byte fg, udword len,
-		__mykapi void(*max_height_handle_policy)(byte, byte));
-__mykapi void kvga_cursor(ubyte cur_start, ubyte cur_end);
+        const int8_t* data, int8_t bg, int8_t fg, uint32_t len,
+        __mykapi void(*max_height_handle_policy)(int8_t, int8_t));
+__mykapi void kvga_cursor(uint8_t cur_start, uint8_t cur_end);
 __mykapi void kvga_update_cursor();
-__mykapi void kvga_clear(byte bg, byte fg);
-__mykapi void kvga_scroll(byte bg, byte fg);
+__mykapi void kvga_clear(int8_t bg, int8_t fg);
+__mykapi void kvga_scroll(int8_t bg, int8_t fg);
 
 #endif

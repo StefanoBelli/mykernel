@@ -1,24 +1,24 @@
 #include <misc/itoa.h>
 #include <misc/string.h>
 
-__mykapi udword myk_strncpy(const byte* src, byte* dst, udword dstlen) {
-	const byte* startsrc = src;
-	udword wrote;
-	while(((wrote = (udword) (src - startsrc)) < dstlen && (*dst++ = *src++))){}
+__mykapi uint32_t myk_strncpy(const int8_t* src, int8_t* dst, uint32_t dstlen) {
+	const int8_t* startsrc = src;
+	uint32_t wrote;
+	while(((wrote = (uint32_t) (src - startsrc)) < dstlen && (*dst++ = *src++))){}
 	return wrote;
 }
 
-#define nextarg(type) ((type) *((dword*) args + argoff))
-#define nextarg_s() nextarg(byte*)
-#define nextarg_c() nextarg(byte)
-#define nextarg_ul_hex() ultoa(nextarg(udword), auxbuf, 16)
-#define nextarg_ul_bin() ultoa(nextarg(udword), auxbuf, 2)
-#define nextarg_us_hex() ustoa(nextarg(uword), auxbuf, 16)
-#define nextarg_us_bin() ustoa(nextarg(uword), auxbuf, 2)
-#define nextarg_ub_hex() ubtoa(nextarg(ubyte), auxbuf, 16)
-#define nextarg_ub_bin() ubtoa(nextarg(ubyte), auxbuf, 2)
-#define nextarg_ui_dec() ultoa(nextarg(udword), auxbuf, 10)
-#define nextarg_si_dec() ltoa(nextarg(dword), auxbuf)
+#define nextarg(type) ((type) *((int32_t*) args + argoff))
+#define nextarg_s() nextarg(int8_t*)
+#define nextarg_c() nextarg(int8_t)
+#define nextarg_ul_hex() ultoa(nextarg(uint32_t), auxbuf, 16)
+#define nextarg_ul_bin() ultoa(nextarg(uint32_t), auxbuf, 2)
+#define nextarg_us_hex() ustoa(nextarg(uint16_t), auxbuf, 16)
+#define nextarg_us_bin() ustoa(nextarg(uint16_t), auxbuf, 2)
+#define nextarg_ub_hex() ubtoa(nextarg(uint8_t), auxbuf, 16)
+#define nextarg_ub_bin() ubtoa(nextarg(uint8_t), auxbuf, 2)
+#define nextarg_ui_dec() ultoa(nextarg(uint32_t), auxbuf, 10)
+#define nextarg_si_dec() ltoa(nextarg(int32_t), auxbuf)
 #define buf_app_s(s) (buf += myk_strncpy(s, buf, maxlen))
 #define buf_app_c(c) (*buf++ = c)
 	
@@ -36,16 +36,16 @@ __mykapi udword myk_strncpy(const byte* src, byte* dst, udword dstlen) {
  * %d: decimal integer
  * %u: unsigned decimal integer
  */
-__mykapi udword myk_vsnprintf(byte* buf, udword bufsiz, const byte* fmt, void* args) {
-	const byte* startbuf = buf;
-	udword wrote = 0;
-	dword argoff = 0;
+__mykapi uint32_t myk_vsnprintf(int8_t* buf, uint32_t bufsiz, const int8_t* fmt, void* args) {
+	const int8_t* startbuf = buf;
+	uint32_t wrote = 0;
+	int32_t argoff = 0;
 	char auxbuf[33]; //needed for nextarg_* macro expansion
 
-	while((wrote = (udword) (buf - startbuf)) < bufsiz && *fmt) {
+	while((wrote = (uint32_t) (buf - startbuf)) < bufsiz && *fmt) {
 		if(*fmt == '%') {
-			udword maxlen = bufsiz - wrote;
-			byte fmtch = *++fmt;
+			uint32_t maxlen = bufsiz - wrote;
+			int8_t fmtch = *++fmt;
 
 			if(fmtch == '%') {
 				buf_app_c('%');
@@ -105,20 +105,20 @@ __mykapi udword myk_vsnprintf(byte* buf, udword bufsiz, const byte* fmt, void* a
 #undef buf_app_s
 #undef buf_app_c
 
-__mykapi byte* myk_str_tok(byte* buf, byte tok) {
-	for(byte ch; (ch = *buf++);) {
+__mykapi int8_t* myk_str_tok(int8_t* buf, int8_t tok) {
+	for(int8_t ch; (ch = *buf++);) {
 		if(ch == tok) {
 			return buf;
 		}
 	}
 
-	return (byte*) 0;
+	return (int8_t*) 0;
 }
 
-__mykapi void* myk_memset(void* b, dword c, udword n) {
-	ubyte* x = (ubyte*) b;
+__mykapi void* myk_memset(void* b, int32_t c, uint32_t n) {
+	uint8_t* x = (uint8_t*) b;
 	for(; n > 0; --n) {
-		*x++ = (ubyte) c;
+		*x++ = (uint8_t) c;
 	}
 
 	return b;

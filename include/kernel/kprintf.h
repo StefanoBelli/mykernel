@@ -2,11 +2,11 @@
 #define MYKERNEL_KPRINTF_H
 
 #include <misc/gcc.h>
-#include <misc/types.h>
+#include "types.h"
 
 #define KPRINTF_BUFSIZE 8192
 
-typedef void(*__mykapi output_printer_fp)(const byte*, udword);
+typedef void(*__mykapi output_printer_fp)(const int8_t*, uint32_t);
 typedef void(*__mykapi your_init_steps_fp)();
 
 /*
@@ -23,7 +23,7 @@ typedef void(*__mykapi your_init_steps_fp)();
  * %d: decimal integer
  * %u: unsigned decimal integer
  */
-udword kprintf(const byte* fmt, ...);
+uint32_t kprintf(const int8_t* fmt, ...);
 __mykapi void kprintf_init(output_printer_fp print, your_init_steps_fp more_steps);
 __mykapi void kprintf_flush();
 

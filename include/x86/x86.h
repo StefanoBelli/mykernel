@@ -19,7 +19,7 @@
 #define x86_invlpg(va) \
 	__asm__ __volatile__ ("invlpg (%0);" :: "r"(va) : "memory")
 
-__mykapi void x86_outb(word port, byte data);
-__mykapi byte x86_inb(word port);
+__mykapi void x86_outb(int16_t port, int8_t data);
+__mykapi int8_t x86_inb(int16_t port);
 
 #endif

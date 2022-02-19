@@ -1,8 +1,8 @@
 #include <kernel/kvga.h>
 #include <driver/vga.h>
 
-static uword ix;
-static uword jy;
+static uint16_t ix;
+static uint16_t jy;
 
 __mykapi void kvga_set_start_pos() {
 	pair_uword start_pos = vga_cursor_get_pos();
@@ -10,10 +10,10 @@ __mykapi void kvga_set_start_pos() {
 	jy = start_pos.y + 1;
 }
 
-__mykapi void kvga_write(const byte* data, byte bg, byte fg, udword len,
-						 __mykapi void(*max_height_handle_policy)(byte, byte)) {
+__mykapi void kvga_write(const int8_t* data, int8_t bg, int8_t fg, uint32_t len,
+                         __mykapi void(*max_height_handle_policy)(int8_t, int8_t)) {
 
-	for(udword i = 0; i < len; ++i) {
+	for(uint32_t i = 0; i < len; ++i) {
 		if(ix >= VGA_WIDTH) {
 			ix = 0;
 			++jy;
@@ -37,7 +37,7 @@ __mykapi void kvga_write(const byte* data, byte bg, byte fg, udword len,
 	}
 }
 
-__mykapi void kvga_cursor(ubyte cur_start, ubyte cur_end) {
+__mykapi void kvga_cursor(uint8_t cur_start, uint8_t cur_end) {
 	if(cur_start == 0 && cur_end == 0) {
 		vga_cursor_disable();
 	} else {
@@ -49,9 +49,9 @@ __mykapi void kvga_update_cursor() {
 	vga_cursor_set_pos(ix, jy);
 }
 
-__mykapi void kvga_clear(byte bg, byte fg) {
-	for(udword k = 0; k < VGA_WIDTH; ++k) {
-		for(udword t = 0; t < VGA_HEIGHT; ++t) {
+__mykapi void kvga_clear(int8_t bg, int8_t fg) {
+	for(uint32_t k = 0; k < VGA_WIDTH; ++k) {
+		for(uint32_t t = 0; t < VGA_HEIGHT; ++t) {
 			vga_text_putc(' ', bg, fg, k, t);
 		}
 	}
@@ -60,15 +60,15 @@ __mykapi void kvga_clear(byte bg, byte fg) {
 	jy = 0;
 }
 
-__mykapi void kvga_scroll(byte bg, byte fg) {
-	for(udword k = 0; k < VGA_WIDTH; ++k) {
-		for(udword t = 1; t < VGA_HEIGHT; ++t) {
-			byte ch = (byte) (vga_text_getc(k, t) & 0xff);
+__mykapi void kvga_scroll(int8_t bg, int8_t fg) {
+	for(uint32_t k = 0; k < VGA_WIDTH; ++k) {
+		for(uint32_t t = 1; t < VGA_HEIGHT; ++t) {
+			int8_t ch = (int8_t) (vga_text_getc(k, t) & 0xff);
 			vga_text_putc(ch, bg, fg, k, t - 1);
 		}
 	}
 	
-	for (udword k = 0; k < VGA_WIDTH; ++k) {
+	for (uint32_t k = 0; k < VGA_WIDTH; ++k) {
 		vga_text_putc(' ', bg, fg, k, VGA_HEIGHT - 1);
 	}
 

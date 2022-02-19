@@ -4,21 +4,21 @@
 #define ALLOCATOR_BUSY_FRAME 0xfe
 #define NORMAL_BUSY_FRAME 0xff
 
-extern udword first_pt_phys;
+extern uint32_t first_pt_phys;
 
-static byte* frbitm;
+static int8_t* frbitm;
 static mm_fralloc_stats stats;
 
 static __mykapi void* __init_bitmap_pagetable(
-		udword pages, udword aligned_higher_addr) {
-	udword* pdt = (udword*) 0xc0000000;
-	udword* pt = (udword*) 0xff800000;
+        uint32_t pages, uint32_t aligned_higher_addr) {
+	uint32_t* pdt = (uint32_t*) 0xc0000000;
+	uint32_t* pt = (uint32_t*) 0xff800000;
 
 	pdt[1021] = 3  | first_pt_phys;
 	
-	udword _target = aligned_higher_addr >> 12;
-	udword i = 1023;
-	udword limit = 1023 - pages + 1;
+	uint32_t _target = aligned_higher_addr >> 12;
+	uint32_t i = 1023;
+	uint32_t limit = 1023 - pages + 1;
 
 	for(; i >= limit; --i) {
 		pt[i] = 3 | (4096 * (_target + i));
@@ -28,13 +28,13 @@ static __mykapi void* __init_bitmap_pagetable(
 }
 
 static __mykapi void __init_frame_bitmap() {
-	for(udword i = 0; i < stats.frames.total; ++i) {
+	for(uint32_t i = 0; i < stats.frames.total; ++i) {
 		frbitm[i] = 0;
 	}
 
-	udword limit = stats.frames.total - stats.frames.allocator_used;
-	for(udword i = stats.frames.total - 1; i >= limit; --i) {
-		frbitm[i] = (byte) ALLOCATOR_BUSY_FRAME;
+	uint32_t limit = stats.frames.total - stats.frames.allocator_used;
+	for(uint32_t i = stats.frames.total - 1; i >= limit; --i) {
+		frbitm[i] = (int8_t) ALLOCATOR_BUSY_FRAME;
 	}
 }
 
@@ -73,7 +73,7 @@ __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
 	stats.allocator_calls.frees = 0; \
 }
 
-__mykapi udword mm_fralloc_init(udword low_phys_addr, udword high_phys_addr) {
+__mykapi uint32_t mm_fralloc_init(uint32_t low_phys_addr, uint32_t high_phys_addr) {
 	if((low_phys_addr & 0xfff) != 0) {
 		return FRALLOC_INIT_LOW_ALIGNMENT;
 	}
@@ -86,10 +86,10 @@ __mykapi udword mm_fralloc_init(udword low_phys_addr, udword high_phys_addr) {
 		return FRALLOC_INIT_ILLEGAL_ARGS;
 	}
 
-	udword high_phys_addr_aligned = 1 + high_phys_addr;
-	udword total_mem = high_phys_addr_aligned - low_phys_addr;
-	udword total_frames = total_mem / 4096;
-	udword pages_to_bitmap = 1 + (total_frames / 4096);
+	uint32_t high_phys_addr_aligned = 1 + high_phys_addr;
+	uint32_t total_mem = high_phys_addr_aligned - low_phys_addr;
+	uint32_t total_frames = total_mem / 4096;
+	uint32_t pages_to_bitmap = 1 + (total_frames / 4096);
 
 	if((pages_to_bitmap / 1024) >= 1) {
 		return FRALLOC_INIT_TOO_MUCH_PAGES;
@@ -108,21 +108,21 @@ __mykapi udword mm_fralloc_init(udword low_phys_addr, udword high_phys_addr) {
 
 #undef INIT_STATS
 
-__mykapi udword mm_fralloc_reserve() {
+__mykapi uint32_t mm_fralloc_reserve() {
 	return 0;
 }
 
-__mykapi udword mm_fralloc_release(udword phys) {
+__mykapi uint32_t mm_fralloc_release(uint32_t phys) {
 	return 0;
 }
 
-__mykapi void mm_fralloc_log_init_err(udword err) {
-	const byte* strerr = "success";
+__mykapi void mm_fralloc_log_init_err(uint32_t err) {
+	const int8_t* strerr = "success";
 
 	if(err == FRALLOC_INIT_LOW_ALIGNMENT) {
-		strerr = "lower address must be aligned to 4096 byte boudary";
+		strerr = "lower address must be aligned to 4096 int8_t boudary";
 	} else if(err == FRALLOC_INIT_HIGH_LAST_BYTE) {
-		strerr = "higher address must specify last byte 0x...fff";
+		strerr = "higher address must specify last int8_t 0x...fff";
 	} else if(err == FRALLOC_INIT_ILLEGAL_ARGS) {
 		strerr = "lower address is greater than higher address";
 	} else if(err == FRALLOC_INIT_TOO_MUCH_PAGES) {
