@@ -18,7 +18,7 @@ static uint32_t __avail_phys_mem_max;
 
 static uint32_t __pt_ptstore[1024] aligned(4096);
 
-uint32_t* pt;
+uint32_t* pt = (uint32_t*) 0xff800000;
 uint32_t pt_phys;
 
 __mykapi uint32_t mm_memmap_seek() {
@@ -35,7 +35,7 @@ __mykapi uint32_t mm_memmap_seek() {
         if(map[i].type == 1) {
             typestr = "usable";
             if(map[i].base_low <= MIN_PHYS_MEM_AVAIL
-               && max_mem > __avail_phys_mem_max) {
+               		&& max_mem > __avail_phys_mem_max) {
                 __avail_phys_mem_min = MIN_PHYS_MEM_AVAIL;
                 __avail_phys_mem_max = max_mem;
             }
@@ -61,7 +61,6 @@ __mykapi uint32_t mm_memmap_ptstore_setup() {
     }
 
     __avail_phys_mem_max -= 0x400000;
-    pt = (uint32_t*) 0xff800000;
 
     return __avail_phys_mem_max <= __avail_phys_mem_min;
 }

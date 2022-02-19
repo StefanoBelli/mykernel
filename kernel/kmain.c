@@ -57,7 +57,7 @@ void kmain() {
 		kern_init_failure();
 	}
 
-    mm_memmap_log_avail_memory();
+	mm_memmap_log_avail_memory();
 
 	uint32_t fralloc_init_fail = mm_fralloc_init();
 	if(fralloc_init_fail != 0) {
