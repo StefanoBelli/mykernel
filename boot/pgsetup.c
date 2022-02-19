@@ -1,5 +1,9 @@
 #include <misc/gcc.h>
 #include <x86/x86.h>
+#include <boot/pgsetup.h>
+#include <mm/pgtbl.h>
+
+uint32_t* pd = (uint32_t*) 0xc0000000;
 
 __mykapi void pgsetup_finalize() {
 	/*
@@ -10,7 +14,7 @@ __mykapi void pgsetup_finalize() {
 	 * Page table (1) state, however, remains unchanged 
 	 * as it is also "linked" to PDT entry #1023
 	 */
-	*(uint32_t*)0xc0000000 = 2;
+	pd[0] = 2;
 
 	/*
 	 * Invalidate TLB-cache entries corresponding 
@@ -34,7 +38,7 @@ __mykapi void pgsetup_finalize() {
 	 * invalidate TLB-cache entries
 	 */
 	for(uint32_t i = 256; i < 1024; ++i) {
-		*((uint32_t*)0xc0001000 + i) = 2;
+		*((uint32_t*)0xc0001000 + i) = 2; //"bootstrap" page table
 		x86_invlpg(0xffc00000 + (i * 4096));
 	}
 }

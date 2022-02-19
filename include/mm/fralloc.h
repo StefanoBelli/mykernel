@@ -41,7 +41,7 @@ typedef struct {
 __mykapi mm_fralloc_stats mm_fralloc_get_stats();
 __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats*);
 __mykapi void mm_fralloc_log_init_err(uint32_t);
-__mykapi uint32_t mm_fralloc_init(uint32_t, uint32_t);
+__mykapi uint32_t mm_fralloc_init();
 __mykapi uint32_t mm_fralloc_reserve();
 __mykapi uint32_t mm_fralloc_release(uint32_t);
 

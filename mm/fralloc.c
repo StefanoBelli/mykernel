@@ -1,20 +1,19 @@
 #include <kernel/kprintf.h>
+#include <mm/pgtbl.h>
 #include <mm/fralloc.h>
 
 #define ALLOCATOR_BUSY_FRAME 0xfe
 #define NORMAL_BUSY_FRAME 0xff
 
-extern uint32_t first_pt_phys;
+extern __mykapi uint32_t __mm_memmap_get_avail_phys_mem_min();
+extern __mykapi uint32_t __mm_memmap_get_avail_phys_mem_max();
 
 static int8_t* frbitm;
 static mm_fralloc_stats stats;
 
 static __mykapi void* __init_bitmap_pagetable(
         uint32_t pages, uint32_t aligned_higher_addr) {
-	uint32_t* pdt = (uint32_t*) 0xc0000000;
-	uint32_t* pt = (uint32_t*) 0xff800000;
-
-	pdt[1021] = 3  | first_pt_phys;
+	pd[1021] = 3  | pt_phys;
 	
 	uint32_t _target = aligned_higher_addr >> 12;
 	uint32_t i = 1023;
@@ -73,7 +72,10 @@ __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
 	stats.allocator_calls.frees = 0; \
 }
 
-__mykapi uint32_t mm_fralloc_init(uint32_t low_phys_addr, uint32_t high_phys_addr) {
+__mykapi uint32_t mm_fralloc_init() {
+    uint32_t low_phys_addr = __mm_memmap_get_avail_phys_mem_min();
+    uint32_t high_phys_addr = __mm_memmap_get_avail_phys_mem_max();
+
 	if((low_phys_addr & 0xfff) != 0) {
 		return FRALLOC_INIT_LOW_ALIGNMENT;
 	}
