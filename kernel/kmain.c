@@ -74,7 +74,7 @@ void kmain() {
 
 	int32_t kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
-		kprintf("kbd: init failed (%d)\n", kbd_init_fail);
+		kprintf("kernel: kbd init failed (%d)\n", kbd_init_fail);
 		kern_init_failure();
 	}
 

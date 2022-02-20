@@ -21,7 +21,7 @@ __mykapi void pgsetup_finalize() {
 	 * to virtual addresses 0 .. 1023 * 4096
 	 */
 	for(uint32_t i = 0; i < 1024; ++i) {
-		x86_invlpg(i * 4096);
+		x86_invlpg(i << 12);
 	}
 
 	/*
@@ -39,7 +39,7 @@ __mykapi void pgsetup_finalize() {
 	 */
 	for(uint32_t i = 256; i < 1024; ++i) {
 		*((uint32_t*)0xc0001000 + i) = 2; //"bootstrap" page table
-		x86_invlpg(0xffc00000 + (i * 4096));
+		x86_invlpg(0xffc00000 + (i << 12));
 	}
 }
 /*

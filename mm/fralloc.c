@@ -3,7 +3,7 @@
 #include <mm/fralloc.h>
 
 #define ALLOCATOR_BUSY_FRAME 0xfe
-#define NORMAL_BUSY_FRAME 0xff
+#define REGULAR_BUSY_FRAME 0xff
 
 extern __mykapi uint32_t __mm_memmap_get_avail_phys_mem_min();
 extern __mykapi uint32_t __mm_memmap_get_avail_phys_mem_max();
@@ -11,8 +11,8 @@ extern __mykapi uint32_t __mm_memmap_get_avail_phys_mem_max();
 static int8_t* frbitm;
 static mm_fralloc_stats stats;
 
-static __mykapi void* __init_bitmap_pagetable(
-        uint32_t pages, uint32_t aligned_higher_addr) {
+static __mykapi void* __init_bitmap_pagetable(uint32_t pages, 
+		uint32_t aligned_higher_addr) {
 	pd[1021] = 3  | pt_phys;
 
 	uint32_t _target = aligned_higher_addr >> 12;
@@ -20,7 +20,7 @@ static __mykapi void* __init_bitmap_pagetable(
 	uint32_t limit = 1023 - pages + 1;
 
 	for(; i >= limit; --i) {
-		pt[i] = 3 | (4096 * (_target + i));
+		pt[i] = 3 | ((_target + i) << 12);
 	}
 
 	return (void*) (0xff400000 | ((i + 1) << 12));
@@ -63,7 +63,7 @@ __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
 	stats.phys.addrspc.start = low_phys_addr; \
 	stats.phys.addrspc.end = high_phys_addr; \
 	stats.phys.mem.total = total_mem; \
-	stats.phys.mem.used = pages_to_bitmap * 4096; \
+	stats.phys.mem.used = pages_to_bitmap << 12; \
 	stats.phys.mem.free = total_mem - stats.phys.mem.used; \
 	stats.frames.total = total_frames; \
 	stats.frames.used = stats.frames.allocator_used = pages_to_bitmap; \
@@ -90,10 +90,10 @@ __mykapi uint32_t mm_fralloc_init() {
 
 	uint32_t high_phys_addr_aligned = 1 + high_phys_addr;
 	uint32_t total_mem = high_phys_addr_aligned - low_phys_addr;
-	uint32_t total_frames = total_mem / 4096;
-	uint32_t pages_to_bitmap = 1 + (total_frames / 4096);
+	uint32_t total_frames = total_mem >> 12;
+	uint32_t pages_to_bitmap = 1 + (total_frames >> 12);
 
-	if((pages_to_bitmap / 1024) >= 1) {
+	if((pages_to_bitmap >> 10) >= 1) {
 		return FRALLOC_INIT_TOO_MUCH_PAGES;
 	}
 

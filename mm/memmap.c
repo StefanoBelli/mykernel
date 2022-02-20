@@ -52,7 +52,7 @@ __mykapi uint32_t mm_memmap_ptstore_setup() {
     uint32_t _pt_start = 1 + ((__avail_phys_mem_max - 0x400000 - 1023) >> 12);
     __avail_phys_mem_min += 0x400000;
 
-    pt_phys = _pt_start * 0x1000;
+    pt_phys = _pt_start << 12;
 
     pd[1022] = ((uint32_t) __pt_ptstore - 0xc0000000 + 0x100000) | 3;
 
