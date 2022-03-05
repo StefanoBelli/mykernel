@@ -2,8 +2,8 @@
 #include <mm/pgtbl.h>
 #include <mm/fralloc.h>
 
-#define ALLOCATOR_BUSY_FRAME 0xfe
-#define REGULAR_BUSY_FRAME 0xff
+#define ALLOCATOR_BUSY_FRAME ((int8_t) 0xfe)
+#define REGULAR_BUSY_FRAME ((int8_t) 0xff)
 
 extern __mykapi uint32_t __mm_memmap_get_avail_phys_mem_min();
 extern __mykapi uint32_t __mm_memmap_get_avail_phys_mem_max();
@@ -33,30 +33,8 @@ static __mykapi void __init_frame_bitmap() {
 
 	uint32_t limit = stats.frames.total - stats.frames.allocator_used;
 	for(uint32_t i = stats.frames.total - 1; i >= limit; --i) {
-		frbitm[i] = (int8_t) ALLOCATOR_BUSY_FRAME;
+		frbitm[i] = ALLOCATOR_BUSY_FRAME;
 	}
-}
-
-__mykapi mm_fralloc_stats mm_fralloc_get_stats() {
-	return stats;
-}
-
-__mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
-	kprintf("fralloc_stats: physical address space starts @ %p\n"
-			"fralloc_stats: physical address space ends @ %p\n"
-			"fralloc_stats: %u bytes of memory are available\n"
-			"fralloc_stats: used %u bytes of memory\n"
-			"fralloc_stats: %u bytes of memory are free\n"
-			"fralloc_stats: %u frames are managed by fralloc\n"
-			"fralloc_stats: %u frames are currently in use\n"
-			"fralloc_stats: %u frames (of %u in use) are reserved for fralloc usage\n"
-			"fralloc_stats: %u frames are free\n"
-			"fralloc_stats: %u allocation requests were made\n"
-			"fralloc_stats: %u freeing requests were made\n", 
-			s->phys.addrspc.start, s->phys.addrspc.end,
-			s->phys.mem.total, s->phys.mem.used, s->phys.mem.free,
-			s->frames.total, s->frames.used, s->frames.allocator_used, s->frames.used, s->frames.free,
-			s->allocator_calls.allocs, s->allocator_calls.frees);
 }
 
 #define INIT_STATS() { \
@@ -65,9 +43,11 @@ __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
 	stats.phys.mem.total = total_mem; \
 	stats.phys.mem.used = pages_to_bitmap << 12; \
 	stats.phys.mem.free = total_mem - stats.phys.mem.used; \
+	stats.phys.addrspc.end_until_alloc = stats.phys.addrspc.end - stats.phys.mem.used; \
 	stats.frames.total = total_frames; \
 	stats.frames.used = stats.frames.allocator_used = pages_to_bitmap; \
 	stats.frames.free = stats.frames.total - stats.frames.used; \
+	stats.frames.total_until_alloc = stats.frames.total - stats.frames.allocator_used; \
 	stats.allocator_calls.allocs = 0; \
 	stats.allocator_calls.frees = 0; \
 }
@@ -111,16 +91,45 @@ __mykapi uint32_t mm_fralloc_init() {
 #undef INIT_STATS
 
 __mykapi uint32_t mm_fralloc_reserve() {
-	return 0;
+	++stats.allocator_calls.allocs;
+	
+	for(uint32_t i = 0; i < stats.frames.total_until_alloc; ++i) {
+		if(frbitm[i] == 0) {
+			stats.phys.mem.used += 4096;
+			stats.phys.mem.free -= 4096;
+			++stats.frames.used;
+			--stats.frames.free;
+			frbitm[i] = REGULAR_BUSY_FRAME;
+			return stats.phys.addrspc.start + (i << 12);
+		}
+	}
+
+	return FRALLOC_RESERVE_EXHAUSTED_MEMORY;
 }
 
 __mykapi uint32_t mm_fralloc_release(uint32_t phys) {
-	return 0;
+	++stats.allocator_calls.frees;
+	
+	if(unlikely(phys < stats.phys.addrspc.start || phys > stats.phys.addrspc.end_until_alloc)) {
+		return FRALLOC_RELEASE_INVALID_PHYS;
+	}
+
+	uint32_t i = (phys - stats.phys.addrspc.start) >> 12;
+	if(likely(frbitm[i] != 0)) {
+		stats.phys.mem.used -= 4096;
+		stats.phys.mem.free += 4096;
+		--stats.frames.used;
+		++stats.frames.free;
+		frbitm[i] = 0;
+		return FRALLOC_RELEASE_OK;
+	}
+
+	return FRALLOC_RELEASE_ALREADY_UNUSED;
 }
 
 __mykapi void mm_fralloc_log_init_err(uint32_t err) {
 	const int8_t* strerr = "success";
-
+	
 	if(err == FRALLOC_INIT_LOW_ALIGNMENT) {
 		strerr = "lower address must be aligned to 4096 int8_t boudary";
 	} else if(err == FRALLOC_INIT_HIGH_LAST_BYTE) {
@@ -136,3 +145,49 @@ __mykapi void mm_fralloc_log_init_err(uint32_t err) {
 	kprintf("fralloc_init: %s\n", strerr);
 }
 
+__mykapi void mm_fralloc_log_reserve_err(uint32_t err) {
+	const int8_t* strerr = "success";
+
+	if(!FRALLOC_RESERVE_IS_OK(err)) {
+		if(err == FRALLOC_RESERVE_EXHAUSTED_MEMORY) {
+			strerr = "memory exhausted";
+		}
+	}
+
+	kprintf("fralloc_reserve: %s\n", strerr);
+}
+
+__mykapi void mm_fralloc_log_release_err(uint32_t err) {
+	const int8_t* strerr = "success";
+
+	if(err == FRALLOC_RELEASE_ALREADY_UNUSED) {
+		strerr = "already unused";
+	} else if(err == FRALLOC_RELEASE_INVALID_PHYS) {
+		strerr = "invalid physical address";
+	}
+
+	kprintf("fralloc_release: %s\n", strerr);
+}
+
+__mykapi mm_fralloc_stats mm_fralloc_get_stats() {
+	return stats;
+}
+
+__mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
+	kprintf("fralloc_stats: physical address space starts @ %p\n"
+			"fralloc_stats: physical address space ends @ %p\n"
+			"fralloc_stats: usable physical address space ends @ %p\n"
+			"fralloc_stats: %u bytes of memory are available\n"
+			"fralloc_stats: used %u bytes of memory\n"
+			"fralloc_stats: %u bytes of memory are free\n"
+			"fralloc_stats: %u frames are managed by fralloc\n"
+			"fralloc_stats: %u frames are currently in use\n"
+			"fralloc_stats: %u frames (of %u in use) are reserved for fralloc usage\n"
+			"fralloc_stats: %u frames are free\n"
+			"fralloc_stats: %u allocation requests were made\n"
+			"fralloc_stats: %u freeing requests were made\n", 
+			s->phys.addrspc.start, s->phys.addrspc.end, s->phys.addrspc.end_until_alloc,
+			s->phys.mem.total, s->phys.mem.used, s->phys.mem.free,
+			s->frames.total, s->frames.used, s->frames.allocator_used, s->frames.used, s->frames.free,
+			s->allocator_calls.allocs, s->allocator_calls.frees);
+}

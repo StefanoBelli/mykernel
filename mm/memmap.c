@@ -26,8 +26,7 @@ __mykapi uint32_t mm_memmap_seek() {
     memory_map_entry* map = (memory_map_entry*) 0xffc07e04;
 
     kprintf("bios-e820: provides the following "
-            "memory map (rhs range next int8_t incl):\n"
-            "memmap: got %u total entries\n", n_ents);
+            "memory map (%d, rhs range last byte incl):\n", n_ents);
 
     for(uint32_t i = 0; i < n_ents; ++i) {
         char* typestr = "reserved";
@@ -63,13 +62,6 @@ __mykapi uint32_t mm_memmap_ptstore_setup() {
     __avail_phys_mem_max -= 0x400000;
 
     return __avail_phys_mem_max <= __avail_phys_mem_min;
-}
-
-__mykapi void mm_memmap_log_avail_memory() {
-    kprintf("kernel: total available memory - %u bytes\n"
-            "kernel: total available memory - from %p to %p\n",
-            __avail_phys_mem_max - __avail_phys_mem_min + 1,
-            __avail_phys_mem_min, __avail_phys_mem_max);
 }
 
 __mykapi uint32_t __mm_memmap_get_avail_phys_mem_min() {

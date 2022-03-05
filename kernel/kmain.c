@@ -57,15 +57,11 @@ void kmain() {
 		kern_init_failure();
 	}
 
-	mm_memmap_log_avail_memory();
-
 	uint32_t fralloc_init_fail = mm_fralloc_init();
 	if(fralloc_init_fail != 0) {
 		mm_fralloc_log_init_err(fralloc_init_fail);
 		kern_init_failure();
 	}
-
-	kprintf("kernel: fralloc has complete control over physical memory\n");
 	
 	mm_fralloc_stats fralloc_stats = mm_fralloc_get_stats();
 	mm_fralloc_log_stats(&fralloc_stats);
