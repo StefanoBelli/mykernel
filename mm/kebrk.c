@@ -1,7 +1,7 @@
 #include <mm/fralloc.h>
 #include <mm/kebrk.h>
 
-#define KERNEL_INITIAL_BREAK_VA 0xc03fffff
+#define KERNEL_INITIAL_BREAK_VA 0xc0400000
 
 static uint32_t current_break = KERNEL_INITIAL_BREAK_VA; //incl
 static uint32_t limit_break = 0; //excl
