@@ -10,6 +10,7 @@
 #include <misc/gcc.h>
 #include <mm/fralloc.h>
 #include <mm/memmap.h>
+#include <mm/kebrk.h>
 #include <boot/pgsetup.h>
 
 static __mykapi void kvga_kprintf_init() {
@@ -65,6 +66,8 @@ void kmain() {
 	
 	mm_fralloc_stats fralloc_stats = mm_fralloc_get_stats();
 	mm_fralloc_log_stats(&fralloc_stats);
+
+	kebrk_init();
 
 	kprintf("kernel: secondary init phase done\n");
 

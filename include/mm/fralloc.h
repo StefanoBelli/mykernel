@@ -55,5 +55,6 @@ __mykapi void mm_fralloc_log_release_err(uint32_t);
 __mykapi uint32_t mm_fralloc_init();
 __mykapi uint32_t mm_fralloc_reserve();
 __mykapi uint32_t mm_fralloc_release(uint32_t);
+__mykapi uint32_t __mm_fralloc_get_bitmap_va();
 
 #endif

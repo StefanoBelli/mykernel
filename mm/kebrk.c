@@ -1,11 +1,15 @@
-#define KERNEL_INITIAL_BREAK_VASTART 0
-#define RESERVED_VASTART 0
-
+#include <mm/fralloc.h>
 #include <mm/kebrk.h>
 
-static const void* const brkman_area_start = KERNEL_INITIAL_BREAK_VASTART;
-static const void* const brkman_area_end = RESERVED_VASTART;
- 
-void* kebrk(uint32_t size) {
+#define KERNEL_INITIAL_BREAK_VA 0xc03fffff
+
+static uint32_t current_break = KERNEL_INITIAL_BREAK_VA; //incl
+static uint32_t limit_break = 0; //excl
+
+__mykapi void kebrk_init() {
+	limit_break = __mm_fralloc_get_bitmap_va();
+}
+
+__mykapi void* kebrk(uint32_t size) {
 	return (void*) 0;
 }

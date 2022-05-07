@@ -191,3 +191,7 @@ __mykapi void mm_fralloc_log_stats(const mm_fralloc_stats* s) {
 			s->frames.total, s->frames.used, s->frames.allocator_used, s->frames.used, s->frames.free,
 			s->allocator_calls.allocs, s->allocator_calls.frees);
 }
+ 
+__mykapi uint32_t __mm_fralloc_get_bitmap_va() {
+	return (uint32_t)frbitm;
+}
