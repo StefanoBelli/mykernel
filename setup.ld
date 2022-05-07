@@ -20,6 +20,7 @@ SECTIONS {
 		kernel/misc.o (.text)
 		mm/memmap.o (.text)
 		mm/fralloc.o (.text)
+		mm/kebrk.o (.text)
 		driver/vga.o (.text)
 		driver/kbd.o (.text)
 		x86/x86.o (.text)
