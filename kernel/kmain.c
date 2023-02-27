@@ -68,7 +68,20 @@ void kmain() {
 	mm_fralloc_log_stats(&fralloc_stats);
 
 	kebrk_init();
-
+/*
+	for(int i = 0; i < 1024 * 1023; ++i) {
+		kprintf("kernel: (%d) attempting kebrk test\n", i + 1);
+		void* vaddr = kebrk();
+		kprintf("kernel: (%d) kebrk returned %p\n", i + 1, vaddr);
+#ifdef DEEPER_TESTING
+		for(int j = 0; j < 0x1000; ++j) {
+			char* cvaddr = ((char*) vaddr) + j;
+			kprintf("kernel: (%d) testing mapped virtual address %p\n", i + 1, cvaddr);
+			*cvaddr = (char) 0xff - *cvaddr;
+		}
+#endif
+	}
+	*/
 	kprintf("kernel: secondary init phase done\n");
 
 	int32_t kbd_init_fail = kbd_init();

@@ -4,6 +4,9 @@
 #include <misc/gcc.h>
 #include "types.h"
 
+#define x86_int3() \
+	__asm__ __volatile__ ("int $3;")
+
 #define x86_cli() \
 	__asm__ __volatile__ ("cli;")
 
