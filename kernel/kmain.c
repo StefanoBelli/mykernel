@@ -12,6 +12,7 @@
 #include <mm/memmap.h>
 #include <mm/kebrk.h>
 #include <boot/pgsetup.h>
+//#include <mm/pgtbl.h> // remove
 
 static __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();
@@ -68,20 +69,20 @@ void kmain() {
 	mm_fralloc_log_stats(&fralloc_stats);
 
 	kebrk_init();
-/*
-	for(int i = 0; i < 1024 * 1023; ++i) {
+	/*
+	kprintf("pt = %p, pd = %p, pt_phys = %p\n", pt, pd, pt_phys);
+	for(int i = 0; i < 1024 * 1024; ++i) {
 		kprintf("kernel: (%d) attempting kebrk test\n", i + 1);
 		void* vaddr = kebrk();
 		kprintf("kernel: (%d) kebrk returned %p\n", i + 1, vaddr);
-#ifdef DEEPER_TESTING
-		for(int j = 0; j < 0x1000; ++j) {
-			char* cvaddr = ((char*) vaddr) + j;
-			kprintf("kernel: (%d) testing mapped virtual address %p\n", i + 1, cvaddr);
-			*cvaddr = (char) 0xff - *cvaddr;
+		if(vaddr == (void*) 0) {
+			kprintf("kernel (%d) kebrk EXHAUSTED MEMORY\n", i + 1);
+			break;
 		}
-#endif
+		*(char*)vaddr = (char) 0xfe;
 	}
 	*/
+
 	kprintf("kernel: secondary init phase done\n");
 
 	int32_t kbd_init_fail = kbd_init();

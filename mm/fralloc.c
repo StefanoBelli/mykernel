@@ -13,7 +13,7 @@ static mm_fralloc_stats stats;
 
 static __mykapi void* __init_bitmap_pagetable(uint32_t pages, 
 		uint32_t aligned_higher_addr) {
-	pd[1021] = 3  | pt_phys;
+	pd[1021] = 3 | pt_phys;
 
 	uint32_t _target = aligned_higher_addr >> 12;
 	uint32_t i = 1023;
