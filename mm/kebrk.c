@@ -8,18 +8,25 @@
 #define KERNEL_LIMIT_BREAK_VA 0xff400000
 
 static uint32_t current_break = KERNEL_INITIAL_BREAK_VA;
+static mm_kebrk_stats _g_stats;
 
-__mykapi void kebrk_init() {
+__mykapi void mm_kebrk_init() {
 	pd[KERNEL_INITIAL_BREAK_VA >> 22] = (pt_phys + 0x1000) | 3;
+	_g_stats.good_calls = 0;
+	_g_stats.total_calls = 0;
+	_g_stats.lower_va = KERNEL_INITIAL_BREAK_VA;
+	_g_stats.higher_va = KERNEL_LIMIT_BREAK_VA;
 }
 
-__mykapi void* kebrk() {
+__mykapi void* mm_kebrk() {
+	++_g_stats.total_calls;
+
 	if(unlikely(current_break == KERNEL_LIMIT_BREAK_VA)) {
 		return KEBRK_EXHAUSTED_MEMORY;
 	}
 
 	uint32_t frame_phys_addr = mm_fralloc_reserve();
-	if(!FRALLOC_RESERVE_IS_OK(frame_phys_addr)) {
+	if(unlikely(!FRALLOC_RESERVE_IS_OK(frame_phys_addr))) {
 		kprintf("kebrk: fralloc failed, log entry follows\n");
 		mm_fralloc_log_reserve_err(frame_phys_addr);
 		return KEBRK_FRALLOC_FAILURE;
@@ -54,7 +61,31 @@ __mykapi void* kebrk() {
 		++cur_pte_idx;
 	}
 
+	++_g_stats.good_calls;
+
 	current_break = cur_pte_idx << 12 | cur_pde_idx << 22;
 
 	return ret_addr;
+}
+
+__mykapi void mm_kebrk_log_err(void* r) {
+	if(r == KEBRK_FRALLOC_FAILURE) {
+		kprintf("kebrk: fralloc failure\n");
+	} else if(r == KEBRK_EXHAUSTED_MEMORY) {
+		kprintf("kebrk: exhausted memory\n");
+	} else {
+		kprintf("kebrk: success\n");
+	}
+}
+
+__mykapi mm_kebrk_stats mm_kebrk_get_stats() {
+	return _g_stats;
+}
+
+__mykapi void mm_kebrk_log_stats(const mm_kebrk_stats* s) {
+	kprintf("kebrk_stats: %d good calls\n"
+			"kebrk_stats: %d total calls\n"
+			"kebrk_stats: extends from lower virtual address 0x%x\n"
+			"kebrk_stats: extends to higher virtual address 0x%x\n",
+			s->good_calls, s->total_calls, s->lower_va, s->higher_va);
 }

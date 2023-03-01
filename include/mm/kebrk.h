@@ -7,15 +7,18 @@
 #define KEBRK_FRALLOC_FAILURE ((void*)-1)
 #define KEBRK_EXHAUSTED_MEMORY ((void*)0)
 
-__mykapi void kebrk_init();
+typedef struct {
+	uint32_t good_calls;
+	uint32_t total_calls;
+	uint32_t lower_va;
+	uint32_t higher_va;
+} mm_kebrk_stats;
 
-/*
- * kebrk - extend kernel break by one page size
- * returns:
- *  - KEBRK_FRALLOC_FAILURE
- *  - KEBRK_EXHAUSTED_MEMORY
- *  - virtaddr
- */
-__mykapi void* kebrk();
+__mykapi void mm_kebrk_init();
+
+__mykapi void* mm_kebrk();
+__mykapi void mm_kebrk_log_err(void*);
+__mykapi mm_kebrk_stats mm_kebrk_get_stats();
+__mykapi void mm_kebrk_log_stats(const mm_kebrk_stats*);
 
 #endif

@@ -12,7 +12,7 @@
 #include <mm/memmap.h>
 #include <mm/kebrk.h>
 #include <boot/pgsetup.h>
-#include <mm/pgtbl.h> // remove
+//#include <mm/pgtbl.h> // remove
 
 static __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();
@@ -68,7 +68,11 @@ void kmain() {
 	mm_fralloc_stats fralloc_stats = mm_fralloc_get_stats();
 	mm_fralloc_log_stats(&fralloc_stats);
 
-	kebrk_init();
+	mm_kebrk_init();
+	/*
+	mm_kebrk_stats kebrk_stats = mm_kebrk_get_stats();
+	mm_kebrk_log_stats(&kebrk_stats);
+
 	kprintf("pt = %p, pd = %p, pt_phys = %p\n", pt, pd, pt_phys);
 	for(int i = 0; i < 1024 * 1024; ++i) {
 		kprintf("kernel: (%d) attempting kebrk test\n", i + 1);
@@ -81,7 +85,8 @@ void kmain() {
 
 		*(char*)vaddr = (char) 0xfe;
 		kprintf("vaddr content = %x\n", *(char*)vaddr);
-	}
+	}*/
+
 	kprintf("kernel: secondary init phase done\n");
 
 	int32_t kbd_init_fail = kbd_init();
