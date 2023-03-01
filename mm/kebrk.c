@@ -34,21 +34,21 @@ __mykapi void* kebrk() {
 	void* ret_addr = (void*) (cur_pte_idx << 12 | cur_pde_idx << 22);
 
 	if(unlikely(cur_pte_idx == 1023)) {
-		int32_t new_pt_idx = ((int32_t)pd[cur_pde_idx] >> 12) - (((int32_t)pt_phys + 0x1000) >> 12) + 1;
+		uint32_t new_pt_idx = (pd[cur_pde_idx] >> 12) - ((pt_phys + 0x1000) >> 12) + 1;
 
 		for(uint32_t j = 0; j < 1024; ++j) {
-			if(((uint32_t*)((uint32_t)(pt + 0x1000) + ((uint32_t)new_pt_idx << 12)))[j] & 1) {
-				new_pt_idx = -1;
-				break;
+			uint32_t* pte = ((uint32_t*)(((uint32_t) pt) + 0x1000 + (new_pt_idx << 12))) + j;
+			if(*pte & 1) {
+				kprintf("kebrk: kernel bug -- pte @ %p has present bit enabled, while expected it to be off\n", pte);
+				kprintf("kernel: kernel bug -- getting trapped, goodbye\n");
+				x86_int3();
 			}
 		}
 
-		if(new_pt_idx == -1) {
-			kprintf("kebrk: KERNEL BUG - getting trapped\n");
-			x86_int3();
+		if(++cur_pde_idx < (KERNEL_LIMIT_BREAK_VA >> 22)) {
+			pd[cur_pde_idx] = (pt_phys + 0x1000 + (new_pt_idx << 12)) | 3;
 		}
-
-		pd[++cur_pde_idx] = (pt_phys + 0x1000 + ((uint32_t)new_pt_idx << 12)) | 3;
+		
 		cur_pte_idx = 0;
 	} else {
 		++cur_pte_idx;
