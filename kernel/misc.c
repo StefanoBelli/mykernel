@@ -19,8 +19,12 @@ __mykapi void ksleep_init() {
 }
 
 __mykapi void system_halt() {
-	kprintf("system halted\n");
+	kprintf("kernel: system halted\n");
 	x86_cli();
 	x86_hlt();
 }
 
+__mykapi void kernel_bug() {
+	kprintf("kernel: kernel bug -- getting trapped, goodbye\n");
+	x86_int3();
+}

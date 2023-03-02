@@ -1,8 +1,8 @@
 #include <kernel/kprintf.h>
+#include <kernel/misc.h>
 #include <mm/pgtbl.h>
 #include <mm/fralloc.h>
 #include <mm/kebrk.h>
-#include <x86/x86.h>
 
 #define KERNEL_INITIAL_BREAK_VA 0xc0400000
 #define KERNEL_LIMIT_BREAK_VA 0xff400000
@@ -36,7 +36,14 @@ __mykapi void* mm_kebrk() {
 	uint32_t cur_pte_idx = (current_break & 0x3ff000) >> 12;
 	
 	uint32_t cur_pt = ((uint32_t) pt + 0x1000) + (((pd[cur_pde_idx] >> 12) - ((pt_phys + 0x1000) >> 12)) << 12);
-	((uint32_t*)cur_pt)[cur_pte_idx] = (frame_phys_addr & 0xfffff000) | 3;
+	uint32_t *cur_pte = ((uint32_t*)cur_pt) + cur_pte_idx;
+
+	if(*cur_pte & 1) {
+		kprintf("kebrk: pte @ %p has present bit enabled, while expected it to be off\n", cur_pte);
+		kernel_bug();
+	}
+
+	*cur_pte = (frame_phys_addr & 0xfffff000) | 3;
 
 	void* ret_addr = (void*) (cur_pte_idx << 12 | cur_pde_idx << 22);
 
@@ -46,13 +53,17 @@ __mykapi void* mm_kebrk() {
 		for(uint32_t j = 0; j < 1024; ++j) {
 			uint32_t* pte = ((uint32_t*)(((uint32_t) pt) + 0x1000 + (new_pt_idx << 12))) + j;
 			if(*pte & 1) {
-				kprintf("kebrk: kernel bug -- pte @ %p has present bit enabled, while expected it to be off\n", pte);
-				kprintf("kernel: kernel bug -- getting trapped, goodbye\n");
-				x86_int3();
+				kprintf("kebrk: pte @ %p has present bit enabled, while expected it to be off\n", pte);
+				kernel_bug();
 			}
 		}
 
 		if(++cur_pde_idx < (KERNEL_LIMIT_BREAK_VA >> 22)) {
+			uint32_t *pde = pd + cur_pde_idx;
+			if(*pde & 1) {
+				kprintf("kebrk: pde @ %p has present bit enabled, while expected it to be off\n", pde);
+				kernel_bug();
+			}
 			pd[cur_pde_idx] = (pt_phys + 0x1000 + (new_pt_idx << 12)) | 3;
 		}
 		

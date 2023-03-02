@@ -6,6 +6,6 @@
 __mykapi void system_halt();
 __mykapi void ksleep(uint32_t);
 __mykapi void ksleep_init();
-
+__mykapi void kernel_bug();
 
 #endif
