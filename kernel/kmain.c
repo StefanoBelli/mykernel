@@ -12,7 +12,6 @@
 #include <mm/memmap.h>
 #include <mm/kebrk.h>
 #include <boot/pgsetup.h>
-//#include <mm/pgtbl.h> // remove
 
 static __mykapi void kvga_kprintf_init() {
 	kvga_set_start_pos();
@@ -47,8 +46,6 @@ void kmain() {
 	kprintf_init(kvga_kprintf_printer, kvga_kprintf_init);
 	ksleep_init();
 
-	kprintf("kernel: first init phase done\n");
-
 	if(mm_memmap_seek() != 0) {
 		kprintf("kernel: seeking available memory failed\n");
 		kern_init_failure();
@@ -69,25 +66,9 @@ void kmain() {
 	mm_fralloc_log_stats(&fralloc_stats);
 
 	mm_kebrk_init();
-	/*
+
 	mm_kebrk_stats kebrk_stats = mm_kebrk_get_stats();
 	mm_kebrk_log_stats(&kebrk_stats);
-
-	kprintf("pt = %p, pd = %p, pt_phys = %p\n", pt, pd, pt_phys);
-	for(int i = 0; i < 1024 * 1024; ++i) {
-		kprintf("kernel: (%d) attempting kebrk test\n", i + 1);
-		void* vaddr = kebrk();
-		kprintf("kernel: (%d) kebrk returned %p\n", i + 1, vaddr);
-		if(vaddr == (void*) 0) {
-			kprintf("kernel (%d) kebrk EXHAUSTED MEMORY\n", i + 1);
-			break;
-		}
-
-		*(char*)vaddr = (char) 0xfe;
-		kprintf("vaddr content = %x\n", *(char*)vaddr);
-	}*/
-
-	kprintf("kernel: secondary init phase done\n");
 
 	int32_t kbd_init_fail = kbd_init();
 	if(kbd_init_fail != 0) {
@@ -96,8 +77,6 @@ void kmain() {
 	}
 
 	x86_pic_clear_mask(1);
-
-	kprintf("kernel: final init phase done\n");
 
 	system_halt();
 }
