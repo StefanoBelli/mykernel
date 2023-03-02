@@ -64,7 +64,8 @@ __mykapi void* mm_kebrk() {
 				kprintf("kebrk: pde @ %p has present bit enabled, while expected it to be off\n", pde);
 				kernel_bug();
 			}
-			pd[cur_pde_idx] = (pt_phys + 0x1000 + (new_pt_idx << 12)) | 3;
+
+			*pde = (pt_phys + 0x1000 + (new_pt_idx << 12)) | 3;
 		}
 		
 		cur_pte_idx = 0;
